@@ -20,7 +20,6 @@ public class RoleRepositoryCustomImpl implements RoleRepositoryCustom {
       List<Predicate> predicates = new ArrayList<>();
 
       QueryUtil.addLikePredicate(root, criteriaBuilder, predicates, "name", query.getName());
-
       QueryUtil.addLikePredicate(root, criteriaBuilder, predicates, "description", query.getDescription());
 
       return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

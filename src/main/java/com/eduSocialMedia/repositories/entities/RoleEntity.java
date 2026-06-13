@@ -1,13 +1,17 @@
 package com.eduSocialMedia.repositories.entities;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,4 +38,8 @@ public class RoleEntity extends BaseEntity {
   @JoinTable(name = "role_permissions", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
   @Builder.Default
   private Set<PermissionEntity> permissions = new HashSet<>();
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "role")
+  private List<AccountEntity> accounts;
 }
