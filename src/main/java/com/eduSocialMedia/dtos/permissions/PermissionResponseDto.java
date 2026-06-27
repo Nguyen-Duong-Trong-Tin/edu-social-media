@@ -20,6 +20,7 @@ import lombok.experimental.SuperBuilder;
 public class PermissionResponseDto extends BaseResponseDto {
   private String name;
   private String code;
+  private String category;
   @JsonIgnoreProperties("permissions")
   private Set<RoleEntity> roles;
 }

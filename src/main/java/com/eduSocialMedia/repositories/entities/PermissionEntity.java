@@ -30,6 +30,9 @@ public class PermissionEntity extends BaseEntity {
   @Column(nullable = false, unique = true, length = 100)
   private String code;
 
+  @Column(length = 100)
+  private String category;
+
   @JsonIgnore
   @ManyToMany(mappedBy = "permissions")
   @Builder.Default

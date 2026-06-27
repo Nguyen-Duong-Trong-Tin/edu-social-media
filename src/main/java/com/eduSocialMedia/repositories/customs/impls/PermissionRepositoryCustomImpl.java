@@ -21,6 +21,7 @@ public class PermissionRepositoryCustomImpl implements PermissionRepositoryCusto
 
       QueryUtil.addLikePredicate(root, criteriaBuilder, predicates, "name", query.getName());
       QueryUtil.addLikePredicate(root, criteriaBuilder, predicates, "code", query.getCode());
+      QueryUtil.addLikePredicate(root, criteriaBuilder, predicates, "category", query.getCategory());
 
       return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     };

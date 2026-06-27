@@ -1,4 +1,4 @@
-package com.eduSocialMedia.dtos.permissions;
+package com.eduSocialMedia.dtos.settingSidebarLinks;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +11,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class PermissionFindDto {
+public class SettingSidebarLinkFindDto {
   private String name;
-  private String code;
-  private String category;
+  private String path;
+  private String icon;
+  private Boolean isExact;
+  private Integer sortOrder;
 }

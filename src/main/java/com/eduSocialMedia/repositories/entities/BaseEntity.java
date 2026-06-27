@@ -28,10 +28,10 @@ public class BaseEntity {
   private Long id;
 
   @CreationTimestamp
-  @Column(updatable = false)
+  @Column(name = "created_at", updatable = false)
   private LocalDateTime createdAt;
 
   @UpdateTimestamp
-  @Column
+  @Column(name = "updated_at")
   private LocalDateTime updatedAt;
 }

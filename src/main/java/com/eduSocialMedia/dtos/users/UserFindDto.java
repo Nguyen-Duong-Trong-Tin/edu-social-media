@@ -1,4 +1,4 @@
-package com.eduSocialMedia.dtos.permissions;
+package com.eduSocialMedia.dtos.users;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class PermissionFindDto {
-  private String name;
-  private String code;
-  private String category;
+public class UserFindDto {
+  private String fullName;
+  private String email;
+  private Boolean isActive;
 }

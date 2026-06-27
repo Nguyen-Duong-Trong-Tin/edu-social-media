@@ -17,4 +17,7 @@ public class PermissionCreateDto {
   @NotBlank(message = "Name is not blank")
   @Size(max = 100, message = "Name maximum length is 100 characters")
   private String name;
+
+  @Size(max = 100, message = "Category maximum length is 100 characters")
+  private String category;
 }
