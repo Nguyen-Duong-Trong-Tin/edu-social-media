@@ -31,7 +31,7 @@ public class RoleEntity extends BaseEntity {
   @Column(nullable = false, unique = true, length = 100)
   private String name;
 
-  @Column
+  @Column(columnDefinition = "TEXT")
   private String description;
 
   @ManyToMany

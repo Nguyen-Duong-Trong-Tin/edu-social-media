@@ -1,6 +1,5 @@
-package com.eduSocialMedia.dtos.roles;
+package com.eduSocialMedia.dtos.groupTopics;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,9 +12,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class RoleCreateDto {
-  @NotBlank(message = "Name is not blank")
-  @Size(max = 100, message = "Name maximum length is 100 characters")
+public class GroupTopicUpdateDto {
+  @Size(max = 100, message = "Group topic name maximum length is 100 characters")
   private String name;
 
   private String description;
