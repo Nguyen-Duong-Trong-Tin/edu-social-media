@@ -1,9 +1,14 @@
 package com.eduSocialMedia.repositories.entities;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,4 +54,7 @@ public class GroupEntity extends BaseEntity {
   @ManyToOne
   @JoinColumn(name = "group_topic_id", nullable = false)
   private GroupTopicEntity groupTopic;
+
+  @OneToMany(mappedBy = "group")
+  private List<GroupArticleEntity> groupArticles;
 }
