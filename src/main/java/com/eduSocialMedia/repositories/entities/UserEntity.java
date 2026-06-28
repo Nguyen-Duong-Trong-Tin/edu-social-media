@@ -52,4 +52,7 @@ public class UserEntity extends BaseEntity {
 
   @OneToMany(mappedBy = "user")
   private List<UserArticleEntity> userArticles;
+
+  @OneToMany(mappedBy = "user")
+  private List<GroupTaskSubmissionEntity> groupTaskSubmissions;
 }

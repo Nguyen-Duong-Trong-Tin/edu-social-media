@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import com.eduSocialMedia.repositories.customs.GroupTaskRepositoryCustom;
 import com.eduSocialMedia.repositories.entities.GroupTaskEntity;
 
-@Repository
 public interface GroupTaskRepository extends JpaRepository<GroupTaskEntity, Long>, JpaSpecificationExecutor<GroupTaskEntity>, GroupTaskRepositoryCustom {
   Optional<GroupTaskEntity> findBySlug(String slug);
 

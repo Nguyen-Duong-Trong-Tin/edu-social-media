@@ -1,13 +1,9 @@
 package com.eduSocialMedia.repositories.entities;
 
-import java.sql.Date;
-import java.util.List;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,13 +13,13 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "group_tasks")
+@Table(name = "group_task_submissions")
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class GroupTaskEntity extends BaseEntity {
+public class GroupTaskSubmissionEntity extends BaseEntity {
   @Column(nullable = false)
   private String name;
 
@@ -33,14 +29,17 @@ public class GroupTaskEntity extends BaseEntity {
   @Column(columnDefinition = "TEXT")
   private String description;
 
-   @Column(columnDefinition = "TEXT")
+  @Column(columnDefinition = "TEXT")
   private String images;
 
   @Column(columnDefinition = "TEXT")
   private String videos;
 
-  @Column(name = "dead_line")
-  private Date deadline;
+  @Column(columnDefinition = "TEXT")
+  private String materials;
+
+  @Column(columnDefinition = "TEXT")
+  private String comment;
 
   @Column(name = "is_active")
   @Builder.Default
@@ -51,9 +50,10 @@ public class GroupTaskEntity extends BaseEntity {
   private Boolean isDeleted = false;
 
   @ManyToOne
-  @JoinColumn(nullable = false)
-  private GroupEntity group;
+  @JoinColumn(name = "group_task_id", nullable = false)
+  private GroupTaskEntity groupTask;
 
-  @OneToMany(mappedBy = "groupTask")
-  private List<GroupTaskSubmissionEntity> groupTaskSubmissions;
+  @ManyToOne
+  @JoinColumn(nullable = false)
+  private UserEntity user;
 }
