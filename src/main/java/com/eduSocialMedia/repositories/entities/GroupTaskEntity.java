@@ -1,12 +1,11 @@
 package com.eduSocialMedia.repositories.entities;
 
-import java.util.List;
+import java.sql.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,13 +15,13 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "groups")
+@Table(name = "group_tasks")
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class GroupEntity extends BaseEntity {
+public class GroupTaskEntity extends BaseEntity {
   @Column(nullable = false)
   private String name;
 
@@ -32,14 +31,14 @@ public class GroupEntity extends BaseEntity {
   @Column(columnDefinition = "TEXT")
   private String description;
 
-  @Column(columnDefinition = "TEXT")
-  private String invitation;
+   @Column(columnDefinition = "TEXT")
+  private String images;
 
   @Column(columnDefinition = "TEXT")
-  private String avatar;
+  private String videos;
 
-  @Column(name = "cover_photo", columnDefinition = "TEXT")
-  private String coverPhoto;
+  @Column(name = "dead_line")
+  private Date deadline;
 
   @Column(name = "is_active")
   @Builder.Default
@@ -50,12 +49,6 @@ public class GroupEntity extends BaseEntity {
   private Boolean isDeleted = false;
 
   @ManyToOne
-  @JoinColumn(name = "group_topic_id", nullable = false)
-  private GroupTopicEntity groupTopic;
-
-  @OneToMany(mappedBy = "group")
-  private List<GroupArticleEntity> groupArticles;
-  
-  @OneToMany(mappedBy = "group")
-  private List<GroupTaskEntity> groupTasks;
+  @JoinColumn(nullable = false)
+  private GroupEntity group;
 }

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import com.eduSocialMedia.repositories.customs.GroupTopicRepositoryCustom;
 import com.eduSocialMedia.repositories.entities.GroupTopicEntity;
 
-@Repository
 public interface GroupTopicRepository extends JpaRepository<GroupTopicEntity, Long>, JpaSpecificationExecutor<GroupTopicEntity>, GroupTopicRepositoryCustom {
   Optional<GroupTopicEntity> findBySlug(String slug);
 

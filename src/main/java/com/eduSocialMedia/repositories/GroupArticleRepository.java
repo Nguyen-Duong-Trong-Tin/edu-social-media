@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import com.eduSocialMedia.repositories.customs.GroupArticleRepositoryCustom;
 import com.eduSocialMedia.repositories.entities.GroupArticleEntity;
 
-@Repository
 public interface GroupArticleRepository extends JpaRepository<GroupArticleEntity, Long>, JpaSpecificationExecutor<GroupArticleEntity>, GroupArticleRepositoryCustom {
   Optional<GroupArticleEntity> findBySlug(String slug);
 
