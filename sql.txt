@@ -319,3 +319,39 @@ INSERT INTO group_tasks (name, slug, description, images, videos, dead_line, is_
 ('Draft Your Magic System Rules', 'draft-magic-system-rules', 'Write a 1-page summary of the limitations of your magic.', NULL, NULL, CURRENT_DATE + INTERVAL '14 days', TRUE, FALSE, 28, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ('Plague Spread Mapping', 'plague-spread-mapping', 'Trace the trade routes that facilitated the Black Death.', '["europe_map.jpg"]', NULL, CURRENT_DATE + INTERVAL '6 days', TRUE, FALSE, 29, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ('Implement Gradient Descent in Python', 'implement-gradient-descent', 'Write a simple linear regression algorithm from scratch.', NULL, NULL, CURRENT_DATE + INTERVAL '10 days', TRUE, FALSE, 30, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+-- chat rooms
+INSERT INTO chat_rooms (name, slug, type, avatar, is_active, is_deleted, group_id, created_at, updated_at) VALUES
+-- GROUP Chat Rooms (Tied to your existing Groups 1-15)
+('Java Devs General', 'java-devs-general', 'GROUP', 'java_chat.png', TRUE, FALSE, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('React Native Lounge', 'react-native-lounge', 'GROUP', NULL, TRUE, FALSE, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Calculus Study Room', 'calculus-study-room', 'GROUP', 'math_chat.png', TRUE, FALSE, 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Impressionism Debate', 'impressionism-debate', 'GROUP', NULL, TRUE, FALSE, 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Pandas & NumPy Chat', 'pandas-numpy-chat', 'GROUP', 'python_chat.png', TRUE, FALSE, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Writers Workshop Feedback', 'writers-workshop-feedback', 'GROUP', NULL, TRUE, FALSE, 6, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('WWII History Buffs', 'ww2-history-buffs', 'GROUP', 'history_chat.png', TRUE, FALSE, 7, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Figma & UI Discussion', 'figma-ui-discussion', 'GROUP', NULL, TRUE, FALSE, 8, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Quantum Theory Q&A', 'quantum-theory-qa', 'GROUP', 'physics_chat.png', TRUE, FALSE, 9, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Photography Lighting Setup', 'photography-lighting-setup', 'GROUP', NULL, TRUE, FALSE, 10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Spring Boot Architecture', 'spring-boot-architecture', 'GROUP', 'spring_chat.png', TRUE, FALSE, 11, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Linear Algebra Help', 'linear-algebra-help', 'GROUP', NULL, TRUE, FALSE, 12, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Shakespeare Analysis', 'shakespeare-analysis', 'GROUP', 'literature_chat.png', TRUE, FALSE, 13, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Roman Empire Chat', 'roman-empire-chat', 'GROUP', NULL, TRUE, FALSE, 14, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Vue.js Best Practices', 'vuejs-best-practices', 'GROUP', 'vue_chat.png', TRUE, FALSE, 15, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+
+-- FRIEND (1-on-1) Chat Rooms (group_id is NULL)
+('Alice & Bob', 'alice-bob-chat', 'FRIEND', NULL, TRUE, FALSE, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Charlie & Diana', 'charlie-diana-chat', 'FRIEND', NULL, TRUE, FALSE, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Evan & Fiona', 'evan-fiona-chat', 'FRIEND', NULL, TRUE, FALSE, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('George & Hannah', 'george-hannah-chat', 'FRIEND', NULL, TRUE, FALSE, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Ian & Julia', 'ian-julia-chat', 'FRIEND', NULL, TRUE, FALSE, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Kevin & Laura', 'kevin-laura-chat', 'FRIEND', NULL, TRUE, FALSE, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Mike & Nancy', 'mike-nancy-chat', 'FRIEND', NULL, TRUE, FALSE, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Oscar & Pam', 'oscar-pam-chat', 'FRIEND', NULL, TRUE, FALSE, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Quinn & Rachel', 'quinn-rachel-chat', 'FRIEND', NULL, TRUE, FALSE, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Steve & Tina', 'steve-tina-chat', 'FRIEND', NULL, TRUE, FALSE, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Uma & Victor', 'uma-victor-chat', 'FRIEND', NULL, TRUE, FALSE, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Walter & Xena', 'walter-xena-chat', 'FRIEND', NULL, TRUE, FALSE, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Yara & Zack', 'yara-zack-chat', 'FRIEND', NULL, TRUE, FALSE, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Aaron & Bella', 'aaron-bella-chat', 'FRIEND', NULL, TRUE, FALSE, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Caleb & Daisy', 'caleb-daisy-chat', 'FRIEND', NULL, TRUE, FALSE, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
