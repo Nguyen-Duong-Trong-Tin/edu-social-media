@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import com.eduSocialMedia.converters.UserConverter;
 import com.eduSocialMedia.dtos.ResponseDto;
 import com.eduSocialMedia.dtos.ResponseSpecification;
@@ -28,6 +29,9 @@ public class UserServiceImpl implements UserService {
   @Autowired
   private UserRepository userRepository;
 
+  @Autowired
+  private PasswordEncoder passwordEncoder;
+
   @Override
   public ResponseEntity<ResponseDto<UserResponseDto>> create(UserCreateDto userCreateDto) {
     UserEntity userExists = this.userRepository.findByEmail(userCreateDto.getEmail()).orElse(null);
@@ -36,6 +40,7 @@ public class UserServiceImpl implements UserService {
     }
 
     UserEntity userEntity = this.userConverter.toUserEntity(userCreateDto);
+    userEntity.setPassword(this.passwordEncoder.encode(userCreateDto.getPassword()));
     userEntity.setSlug(generateUniqueSlug(userCreateDto.getFullName()));
     userEntity.setIsActive(true);
     userEntity.setIsDeleted(false);

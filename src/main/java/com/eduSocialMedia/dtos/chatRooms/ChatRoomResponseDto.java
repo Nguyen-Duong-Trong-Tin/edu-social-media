@@ -2,7 +2,7 @@ package com.eduSocialMedia.dtos.chatRooms;
 
 import com.eduSocialMedia.dtos.BaseResponseDto;
 import com.eduSocialMedia.dtos.groups.GroupResponseDto;
-import com.eduSocialMedia.repositories.enums.ChatRoomTypeEnum;
+import com.eduSocialMedia.enums.ChatRoomTypeEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

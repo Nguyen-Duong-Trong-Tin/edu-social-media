@@ -1,6 +1,6 @@
 package com.eduSocialMedia.repositories.entities;
 
-import com.eduSocialMedia.repositories.enums.ChatRoomTypeEnum;
+import com.eduSocialMedia.enums.ChatRoomTypeEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

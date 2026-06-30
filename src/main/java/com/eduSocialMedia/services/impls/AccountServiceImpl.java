@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import com.eduSocialMedia.converters.AccountConverter;
 import com.eduSocialMedia.dtos.ResponseDto;
 import com.eduSocialMedia.dtos.ResponseSpecification;
@@ -33,9 +34,13 @@ public class AccountServiceImpl implements AccountService {
   @Autowired
   private RoleRepository roleRepository;
 
+  @Autowired
+  private PasswordEncoder passwordEncoder;
+
   @Override
   public ResponseEntity<ResponseDto<AccountResponseDto>> create(AccountCreateDto accountCreateDto) {
     AccountEntity accountEntity = this.accountConverter.toAccountEntity(accountCreateDto);
+    accountEntity.setPassword(this.passwordEncoder.encode(accountCreateDto.getPassword()));
 
     AccountEntity accountUsernameExists = this.accountRepository.findByUserName(accountCreateDto.getUserName())
         .orElse(null);

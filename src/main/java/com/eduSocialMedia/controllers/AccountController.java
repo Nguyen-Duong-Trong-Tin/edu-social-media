@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.eduSocialMedia.annotations.Auth;
 import com.eduSocialMedia.dtos.ResponseDto;
 import com.eduSocialMedia.dtos.ResponseSpecification;
 import com.eduSocialMedia.dtos.accounts.AccountCreateDto;
@@ -31,6 +32,7 @@ public class AccountController {
   private AccountService accountService;
 
   @PostMapping
+  @Auth({ "ACCOUNT" })
   public ResponseEntity<ResponseDto<AccountResponseDto>> create(@Valid @RequestBody AccountCreateDto accountCreateDto) {
     return this.accountService.create(accountCreateDto);
   }

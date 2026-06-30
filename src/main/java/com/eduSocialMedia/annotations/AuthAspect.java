@@ -17,7 +17,6 @@ import jakarta.servlet.http.HttpServletRequest;
 @Aspect
 @Component
 public class AuthAspect {
-
   @Autowired
   private HttpServletRequest request;
 

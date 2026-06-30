@@ -1,4 +1,4 @@
-package com.eduSocialMedia.repositories.enums;
+package com.eduSocialMedia.enums;
 
 public enum ChatRoomTypeEnum {
   FRIEND,

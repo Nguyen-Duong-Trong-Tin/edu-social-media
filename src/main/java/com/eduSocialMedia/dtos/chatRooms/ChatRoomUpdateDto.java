@@ -1,6 +1,6 @@
 package com.eduSocialMedia.dtos.chatRooms;
 
-import com.eduSocialMedia.repositories.enums.ChatRoomTypeEnum;
+import com.eduSocialMedia.enums.ChatRoomTypeEnum;
 
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;

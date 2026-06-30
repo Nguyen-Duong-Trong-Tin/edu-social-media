@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import com.eduSocialMedia.repositories.customs.ChatMessageRepositoryCustom;
 import com.eduSocialMedia.repositories.entities.ChatMessageEntity;
 
-@Repository
 public interface ChatMessageRepository extends JpaRepository<ChatMessageEntity, Long>, JpaSpecificationExecutor<ChatMessageEntity>, ChatMessageRepositoryCustom {
   Optional<ChatMessageEntity> findByIdAndIsDeletedFalse(Long id);
 }
