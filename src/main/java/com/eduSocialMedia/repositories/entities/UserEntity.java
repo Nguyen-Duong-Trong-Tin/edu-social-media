@@ -55,4 +55,7 @@ public class UserEntity extends BaseEntity {
 
   @OneToMany(mappedBy = "user")
   private List<GroupTaskSubmissionEntity> groupTaskSubmissions;
+
+  @OneToMany(mappedBy = "user")
+  private List<ChatMessageEntity> chatMessages;
 }

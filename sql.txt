@@ -355,3 +355,39 @@ INSERT INTO chat_rooms (name, slug, type, avatar, is_active, is_deleted, group_i
 ('Yara & Zack', 'yara-zack-chat', 'FRIEND', NULL, TRUE, FALSE, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ('Aaron & Bella', 'aaron-bella-chat', 'FRIEND', NULL, TRUE, FALSE, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ('Caleb & Daisy', 'caleb-daisy-chat', 'FRIEND', NULL, TRUE, FALSE, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+-- chat messages
+INSERT INTO chat_messages (content, images, videos, materials, is_deleted, user_id, chat_room_id, created_at, updated_at) VALUES
+-- 💬 Messages in GROUP Chat Rooms (Rooms 1-15)
+('Hey everyone! Does anyone have a good tutorial for Spring Security?', NULL, NULL, NULL, FALSE, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('I highly recommend the Baeldung series on it.', NULL, NULL, '["baeldung_link.txt"]', FALSE, 2, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Has anyone managed to fix the bottom tab navigation bug?', NULL, NULL, NULL, FALSE, 3, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Yeah, you need to downgrade React Navigation to v5 for now. Here is a screenshot of my package.json.', '["package_json.png"]', NULL, NULL, FALSE, 4, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('I am really stuck on problem 4 from the worksheet. Can anyone help?', NULL, NULL, NULL, FALSE, 5, 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Sure! Use the chain rule first. Here is a video breakdown.', NULL, '["chain_rule_help.mp4"]', NULL, FALSE, 6, 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Monet’s use of light is just unmatched.', NULL, NULL, NULL, FALSE, 7, 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Agreed, though I think Renoir had better composition.', NULL, NULL, NULL, FALSE, 8, 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Does pandas merge() default to inner or outer join?', NULL, NULL, NULL, FALSE, 9, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Inner join by default! Always check the docs though.', NULL, NULL, '["pandas_docs.pdf"]', FALSE, 10, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Please review the first chapter of my novel when you have time!', NULL, NULL, '["chapter1_draft.pdf"]', FALSE, 11, 6, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('The invasion of Normandy was the definitive turning point.', NULL, NULL, NULL, FALSE, 12, 7, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('I just published the new Figma UI kit for the project.', '["ui_kit_preview.png"]', NULL, '["figma_file.fig"]', FALSE, 13, 8, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Is Schrödinger’s cat considered a thought experiment or a paradox?', NULL, NULL, NULL, FALSE, 14, 9, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Check out this lighting setup I used for my recent portrait shoot.', '["studio_setup.jpg", "final_portrait.jpg"]', NULL, NULL, FALSE, 15, 10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+
+-- 💬 Messages in FRIEND (1-on-1) Chat Rooms (Rooms 16-30)
+('Hey Bob, are we still on for the coding session tonight?', NULL, NULL, NULL, FALSE, 1, 16, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Yes! Let us meet on Discord at 8 PM.', NULL, NULL, NULL, FALSE, 2, 16, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Did you finish the history reading for tomorrow?', NULL, NULL, NULL, FALSE, 3, 17, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Not yet, I am only on page 42.', NULL, NULL, NULL, FALSE, 4, 17, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('I loved your latest art piece! What brushes did you use?', NULL, NULL, NULL, FALSE, 6, 18, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Thanks Fiona! I used a custom pack, I can send it to you.', NULL, NULL, '["custom_brushes.zip"]', FALSE, 5, 18, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Can you check my grammar on this paragraph?', NULL, NULL, '["paragraph.txt"]', FALSE, 8, 19, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Looks good, just missing a comma after the introductory clause.', NULL, NULL, NULL, FALSE, 7, 19, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Are you going to the acting workshop this weekend?', NULL, NULL, NULL, FALSE, 10, 20, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('I cannot make it, unfortunately. Filming a project.', '["set_photo.jpg"]', NULL, NULL, FALSE, 9, 20, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('I found a great article on cognitive behavioral therapy for our paper.', NULL, NULL, '["cbt_article.pdf"]', FALSE, 12, 21, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Awesome, I will read it tonight. Thanks Laura!', NULL, NULL, NULL, FALSE, 11, 21, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('I have a new mystery for our next D&D campaign!', NULL, NULL, NULL, FALSE, 14, 22, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Oh no, my character almost died last time...', NULL, NULL, NULL, FALSE, 13, 22, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('Can you review my Vue component? It is throwing an error.', NULL, NULL, '["HeaderComponent.vue"]', FALSE, 15, 23, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
