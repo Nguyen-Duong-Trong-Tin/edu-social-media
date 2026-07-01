@@ -9,8 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.eduSocialMedia.dtos.ResponseDto;
-import com.eduSocialMedia.dtos.auths.AuthLoginDto;
-import com.eduSocialMedia.dtos.auths.AuthLoginResponseDto;
+import com.eduSocialMedia.dtos.auth.AuthLoginDto;
+import com.eduSocialMedia.dtos.auth.AuthLoginResponseDto;
 import com.eduSocialMedia.enums.AuthTypeEnum;
 import com.eduSocialMedia.repositories.AccountRepository;
 import com.eduSocialMedia.repositories.entities.AccountEntity;

@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eduSocialMedia.dtos.ResponseDto;
-import com.eduSocialMedia.dtos.auths.AuthLoginDto;
-import com.eduSocialMedia.dtos.auths.AuthLoginResponseDto;
+import com.eduSocialMedia.dtos.auth.AuthLoginDto;
+import com.eduSocialMedia.dtos.auth.AuthLoginResponseDto;
 import com.eduSocialMedia.services.AuthService;
 
 import jakarta.validation.Valid;

@@ -1,4 +1,4 @@
-package com.eduSocialMedia.dtos.auths;
+package com.eduSocialMedia.dtos.auth;
 
 import com.eduSocialMedia.dtos.accounts.AccountResponseDto;
 

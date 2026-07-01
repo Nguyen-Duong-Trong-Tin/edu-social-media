@@ -1,4 +1,4 @@
-package com.eduSocialMedia.dtos.auths;
+package com.eduSocialMedia.dtos.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
