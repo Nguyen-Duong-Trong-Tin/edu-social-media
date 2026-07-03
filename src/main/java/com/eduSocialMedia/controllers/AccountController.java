@@ -21,6 +21,7 @@ import com.eduSocialMedia.dtos.accounts.AccountCreateDto;
 import com.eduSocialMedia.dtos.accounts.AccountFindDto;
 import com.eduSocialMedia.dtos.accounts.AccountResponseDto;
 import com.eduSocialMedia.dtos.accounts.AccountUpdateDto;
+import com.eduSocialMedia.enums.AuthTypeEnum;
 import com.eduSocialMedia.services.AccountService;
 
 import jakarta.validation.Valid;
@@ -28,33 +29,40 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/v1/accounts")
 public class AccountController {
-  @Autowired
-  private AccountService accountService;
+  private final AccountService accountService;
+
+  AccountController(AccountService accountService) {
+    this.accountService = accountService;
+  }
 
   @PostMapping
-  @Auth({ "ACCOUNT" })
+  @Auth({ AuthTypeEnum.ACCOUNT })
   public ResponseEntity<ResponseDto<AccountResponseDto>> create(@Valid @RequestBody AccountCreateDto accountCreateDto) {
     return this.accountService.create(accountCreateDto);
   }
 
   @PatchMapping("/{id}")
+  @Auth({ AuthTypeEnum.ACCOUNT })
   public ResponseEntity<ResponseDto<AccountResponseDto>> update(@PathVariable Long id,
       @Valid @RequestBody AccountUpdateDto accountUpdateDto) {
     return this.accountService.update(id, accountUpdateDto);
   }
 
   @DeleteMapping("/{id}")
+  @Auth({ AuthTypeEnum.ACCOUNT })
   public ResponseEntity<ResponseDto<Object>> delete(@PathVariable Long id) {
     return this.accountService.delete(id);
   }
 
   @GetMapping
+  @Auth({ AuthTypeEnum.ACCOUNT })
   public ResponseEntity<ResponseDto<ResponseSpecification<AccountResponseDto>>> find(AccountFindDto query,
       @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable) {
     return this.accountService.find(query, pageable);
   }
 
   @GetMapping("/{id}")
+  @Auth({ AuthTypeEnum.ACCOUNT })
   public ResponseEntity<ResponseDto<AccountResponseDto>> findById(@PathVariable Long id) {
     return this.accountService.findById(id);
   }

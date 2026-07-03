@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.eduSocialMedia.annotations.Auth;
 import com.eduSocialMedia.dtos.ResponseDto;
 import com.eduSocialMedia.dtos.ResponseSpecification;
 import com.eduSocialMedia.dtos.users.UserCreateDto;
 import com.eduSocialMedia.dtos.users.UserFindDto;
 import com.eduSocialMedia.dtos.users.UserResponseDto;
 import com.eduSocialMedia.dtos.users.UserUpdateDto;
+import com.eduSocialMedia.enums.AuthTypeEnum;
 import com.eduSocialMedia.services.UserService;
 
 import jakarta.validation.Valid;
@@ -27,32 +29,40 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/v1/users")
 public class UserController {
-  @Autowired
-  private UserService userService;
+  private final UserService userService;
+
+  UserController(UserService userService) {
+    this.userService = userService;
+  }
 
   @PostMapping
+  @Auth({ AuthTypeEnum.ACCOUNT })
   public ResponseEntity<ResponseDto<UserResponseDto>> create(@Valid @RequestBody UserCreateDto userCreateDto) {
     return this.userService.create(userCreateDto);
   }
 
   @PatchMapping("/{id}")
+  @Auth({ AuthTypeEnum.ACCOUNT })
   public ResponseEntity<ResponseDto<UserResponseDto>> update(@PathVariable Long id,
       @Valid @RequestBody UserUpdateDto userUpdateDto) {
     return this.userService.update(id, userUpdateDto);
   }
 
   @DeleteMapping("/{id}")
+  @Auth({ AuthTypeEnum.ACCOUNT })
   public ResponseEntity<ResponseDto<Object>> delete(@PathVariable Long id) {
     return this.userService.delete(id);
   }
 
   @GetMapping
+  @Auth({ AuthTypeEnum.ACCOUNT })
   public ResponseEntity<ResponseDto<ResponseSpecification<UserResponseDto>>> find(UserFindDto query,
       @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable) {
     return this.userService.find(query, pageable);
   }
 
   @GetMapping("/{id}")
+  @Auth({ AuthTypeEnum.ACCOUNT })
   public ResponseEntity<ResponseDto<UserResponseDto>> findById(@PathVariable Long id) {
     return this.userService.findById(id);
   }

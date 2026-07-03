@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.eduSocialMedia.annotations.Auth;
 import com.eduSocialMedia.dtos.ResponseDto;
 import com.eduSocialMedia.dtos.ResponseSpecification;
 import com.eduSocialMedia.dtos.groupTopics.GroupTopicCreateDto;
 import com.eduSocialMedia.dtos.groupTopics.GroupTopicFindDto;
 import com.eduSocialMedia.dtos.groupTopics.GroupTopicResponseDto;
 import com.eduSocialMedia.dtos.groupTopics.GroupTopicUpdateDto;
+import com.eduSocialMedia.enums.AuthTypeEnum;
 import com.eduSocialMedia.services.GroupTopicService;
 
 import jakarta.validation.Valid;
@@ -27,32 +29,40 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/v1/group-topics")
 public class GroupTopicController {
-  @Autowired
-  private GroupTopicService groupTopicService;
+  private final GroupTopicService groupTopicService;
+
+  GroupTopicController(GroupTopicService groupTopicService) {
+    this.groupTopicService = groupTopicService;
+  }
 
   @PostMapping
+  @Auth({ AuthTypeEnum.ACCOUNT })
   public ResponseEntity<ResponseDto<GroupTopicResponseDto>> create(@Valid @RequestBody GroupTopicCreateDto groupTopicCreateDto) {
     return this.groupTopicService.create(groupTopicCreateDto);
   }
 
   @PatchMapping("/{id}")
+  @Auth({ AuthTypeEnum.ACCOUNT })
   public ResponseEntity<ResponseDto<GroupTopicResponseDto>> update(@PathVariable Long id,
       @Valid @RequestBody GroupTopicUpdateDto groupTopicUpdateDto) {
     return this.groupTopicService.update(id, groupTopicUpdateDto);
   }
 
   @DeleteMapping("/{id}")
+  @Auth({ AuthTypeEnum.ACCOUNT })
   public ResponseEntity<ResponseDto<Object>> delete(@PathVariable Long id) {
     return this.groupTopicService.delete(id);
   }
 
   @GetMapping
+  @Auth({ AuthTypeEnum.ACCOUNT })
   public ResponseEntity<ResponseDto<ResponseSpecification<GroupTopicResponseDto>>> find(GroupTopicFindDto query,
       @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable) {
     return this.groupTopicService.find(query, pageable);
   }
 
   @GetMapping("/{id}")
+  @Auth({ AuthTypeEnum.ACCOUNT })
   public ResponseEntity<ResponseDto<GroupTopicResponseDto>> findById(@PathVariable Long id) {
     return this.groupTopicService.findById(id);
   }
