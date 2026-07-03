@@ -1,7 +1,6 @@
 package com.eduSocialMedia.converters;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.eduSocialMedia.dtos.chatRooms.ChatRoomCreateDto;
@@ -11,8 +10,11 @@ import com.eduSocialMedia.repositories.entities.ChatRoomEntity;
 
 @Component
 public class ChatRoomConverter {
-  @Autowired
-  private ModelMapper modelMapper;
+  private final ModelMapper modelMapper;
+
+  ChatRoomConverter(ModelMapper modelMapper) {
+    this.modelMapper = modelMapper;
+  }
 
   public ChatRoomEntity toChatRoomEntity(ChatRoomCreateDto createDto) {
     return this.modelMapper.map(createDto, ChatRoomEntity.class);

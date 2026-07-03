@@ -1,7 +1,6 @@
 package com.eduSocialMedia.converters;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.eduSocialMedia.dtos.groupArticles.GroupArticleCreateDto;
@@ -11,8 +10,11 @@ import com.eduSocialMedia.repositories.entities.GroupArticleEntity;
 
 @Component
 public class GroupArticleConverter {
-  @Autowired
-  private ModelMapper modelMapper;
+  private final ModelMapper modelMapper;
+
+  GroupArticleConverter(ModelMapper modelMapper) {
+    this.modelMapper = modelMapper;
+  }
 
   public GroupArticleEntity toGroupArticleEntity(GroupArticleCreateDto createDto) {
     return this.modelMapper.map(createDto, GroupArticleEntity.class);

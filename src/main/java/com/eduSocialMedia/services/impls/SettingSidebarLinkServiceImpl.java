@@ -2,7 +2,6 @@ package com.eduSocialMedia.services.impls;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -22,11 +21,14 @@ import com.eduSocialMedia.services.SettingSidebarLinkService;
 
 @Service
 public class SettingSidebarLinkServiceImpl implements SettingSidebarLinkService {
-  @Autowired
-  private SettingSidebarLinkConverter settingSidebarLinkConverter;
+  private final SettingSidebarLinkConverter settingSidebarLinkConverter;
+  private final SettingSidebarLinkRepository settingSidebarLinkRepository;
 
-  @Autowired
-  private SettingSidebarLinkRepository settingSidebarLinkRepository;
+  SettingSidebarLinkServiceImpl(SettingSidebarLinkConverter settingSidebarLinkConverter,
+      SettingSidebarLinkRepository settingSidebarLinkRepository) {
+    this.settingSidebarLinkConverter = settingSidebarLinkConverter;
+    this.settingSidebarLinkRepository = settingSidebarLinkRepository;
+  }
 
   @Override
   public ResponseEntity<ResponseDto<SettingSidebarLinkResponseDto>> create(SettingSidebarLinkCreateDto createDto) {
@@ -37,19 +39,22 @@ public class SettingSidebarLinkServiceImpl implements SettingSidebarLinkService 
     SettingSidebarLinkEntity entity = this.settingSidebarLinkConverter.toSettingSidebarLinkEntity(createDto);
     entity = this.settingSidebarLinkRepository.save(entity);
 
-    SettingSidebarLinkResponseDto responseDto = this.settingSidebarLinkConverter.toSettingSidebarLinkResponseDto(entity);
+    SettingSidebarLinkResponseDto responseDto = this.settingSidebarLinkConverter
+        .toSettingSidebarLinkResponseDto(entity);
     return ResponseDto.success(responseDto);
   }
 
   @Override
-  public ResponseEntity<ResponseDto<SettingSidebarLinkResponseDto>> update(Long id, SettingSidebarLinkUpdateDto updateDto) {
+  public ResponseEntity<ResponseDto<SettingSidebarLinkResponseDto>> update(Long id,
+      SettingSidebarLinkUpdateDto updateDto) {
     SettingSidebarLinkEntity entity = this.settingSidebarLinkRepository.findById(id).orElse(null);
     if (entity == null) {
       return ResponseDto.notFound("SettingSidebarLink not found");
     }
 
     if (updateDto.getPath() != null) {
-      SettingSidebarLinkEntity existing = this.settingSidebarLinkRepository.findByPath(updateDto.getPath()).orElse(null);
+      SettingSidebarLinkEntity existing = this.settingSidebarLinkRepository.findByPath(updateDto.getPath())
+          .orElse(null);
       if (existing != null && !existing.getId().equals(id)) {
         return ResponseDto.badRequest(List.of("Path already exists"));
       }
@@ -58,7 +63,8 @@ public class SettingSidebarLinkServiceImpl implements SettingSidebarLinkService 
     this.settingSidebarLinkConverter.copyToSettingSidebarLinkEntity(updateDto, entity);
     entity = this.settingSidebarLinkRepository.save(entity);
 
-    SettingSidebarLinkResponseDto responseDto = this.settingSidebarLinkConverter.toSettingSidebarLinkResponseDto(entity);
+    SettingSidebarLinkResponseDto responseDto = this.settingSidebarLinkConverter
+        .toSettingSidebarLinkResponseDto(entity);
     return ResponseDto.success(responseDto);
   }
 
@@ -74,7 +80,8 @@ public class SettingSidebarLinkServiceImpl implements SettingSidebarLinkService 
   }
 
   @Override
-  public ResponseEntity<ResponseDto<ResponseSpecification<SettingSidebarLinkResponseDto>>> find(SettingSidebarLinkFindDto query, Pageable pageable) {
+  public ResponseEntity<ResponseDto<ResponseSpecification<SettingSidebarLinkResponseDto>>> find(
+      SettingSidebarLinkFindDto query, Pageable pageable) {
     Specification<SettingSidebarLinkEntity> spec = this.settingSidebarLinkRepository.hasCriteria(query);
     Page<SettingSidebarLinkEntity> pageResult = this.settingSidebarLinkRepository.findAll(spec, pageable);
 
@@ -105,7 +112,8 @@ public class SettingSidebarLinkServiceImpl implements SettingSidebarLinkService 
       return ResponseDto.notFound("SettingSidebarLink not found");
     }
 
-    SettingSidebarLinkResponseDto responseDto = this.settingSidebarLinkConverter.toSettingSidebarLinkResponseDto(entity);
+    SettingSidebarLinkResponseDto responseDto = this.settingSidebarLinkConverter
+        .toSettingSidebarLinkResponseDto(entity);
     return ResponseDto.success(responseDto);
   }
 }

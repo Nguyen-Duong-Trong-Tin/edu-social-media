@@ -2,7 +2,6 @@ package com.eduSocialMedia.services.impls;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,14 +23,16 @@ import com.eduSocialMedia.services.ChatRoomService;
 
 @Service
 public class ChatRoomServiceImpl implements ChatRoomService {
-  @Autowired
-  private ChatRoomConverter chatRoomConverter;
+  private final ChatRoomConverter chatRoomConverter;
+  private final ChatRoomRepository chatRoomRepository;
+  private final GroupRepository groupRepository;
 
-  @Autowired
-  private ChatRoomRepository chatRoomRepository;
-
-  @Autowired
-  private GroupRepository groupRepository;
+  ChatRoomServiceImpl(ChatRoomConverter chatRoomConverter, ChatRoomRepository chatRoomRepository,
+      GroupRepository groupRepository) {
+    this.chatRoomConverter = chatRoomConverter;
+    this.chatRoomRepository = chatRoomRepository;
+    this.groupRepository = groupRepository;
+  }
 
   @Override
   public ResponseEntity<ResponseDto<ChatRoomResponseDto>> create(ChatRoomCreateDto createDto) {
@@ -95,7 +96,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
   }
 
   @Override
-  public ResponseEntity<ResponseDto<ResponseSpecification<ChatRoomResponseDto>>> find(ChatRoomFindDto query, Pageable pageable) {
+  public ResponseEntity<ResponseDto<ResponseSpecification<ChatRoomResponseDto>>> find(ChatRoomFindDto query,
+      Pageable pageable) {
     Specification<ChatRoomEntity> spec = this.chatRoomRepository.hasCriteria(query);
     Page<ChatRoomEntity> pageResult = this.chatRoomRepository.findAll(spec, pageable);
 

@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -29,14 +28,16 @@ import com.eduSocialMedia.services.RoleService;
 
 @Service
 public class RoleServiceImpl implements RoleService {
-  @Autowired
-  private RoleConverter roleConverter;
+  private final RoleConverter roleConverter;
+  private final RoleRepository roleRepository;
+  private final PermissionRepository permissionRepository;
 
-  @Autowired
-  private RoleRepository roleRepository;
-
-  @Autowired
-  private PermissionRepository permissionRepository;
+  RoleServiceImpl(RoleConverter roleConverter, RoleRepository roleRepository,
+      PermissionRepository permissionRepository) {
+    this.roleConverter = roleConverter;
+    this.roleRepository = roleRepository;
+    this.permissionRepository = permissionRepository;
+  }
 
   @Override
   public ResponseEntity<ResponseDto<RoleResponseDto>> create(RoleCreateDto roleCreateDto) {
@@ -57,7 +58,8 @@ public class RoleServiceImpl implements RoleService {
       return ResponseDto.notFound("Role not found");
     }
 
-    List<PermissionEntity> permissionEntities = this.permissionRepository.findAllById(roleAddPermissionsDto.getPermissionIds());
+    List<PermissionEntity> permissionEntities = this.permissionRepository
+        .findAllById(roleAddPermissionsDto.getPermissionIds());
     if (permissionEntities.size() != roleAddPermissionsDto.getPermissionIds().size()) {
       return ResponseDto.notFound("Some permissions not found");
     }
@@ -87,13 +89,15 @@ public class RoleServiceImpl implements RoleService {
   }
 
   @Override
-  public ResponseEntity<ResponseDto<RoleResponseDto>> replacePermissions(Long id, RoleReplacePermissionsDto roleReplacePermissionsDto) {
+  public ResponseEntity<ResponseDto<RoleResponseDto>> replacePermissions(Long id,
+      RoleReplacePermissionsDto roleReplacePermissionsDto) {
     RoleEntity roleEntity = this.roleRepository.findById(id).orElse(null);
     if (roleEntity == null) {
       return ResponseDto.notFound("Role not found");
     }
 
-    List<PermissionEntity> permissionEntities = this.permissionRepository.findAllById(roleReplacePermissionsDto.getPermissionIds());
+    List<PermissionEntity> permissionEntities = this.permissionRepository
+        .findAllById(roleReplacePermissionsDto.getPermissionIds());
     if (permissionEntities.size() != roleReplacePermissionsDto.getPermissionIds().size()) {
       return ResponseDto.notFound("Some permissions not found");
     }
@@ -102,7 +106,7 @@ public class RoleServiceImpl implements RoleService {
     roleEntity.setPermissions(newPermissions);
 
     roleEntity = this.roleRepository.save(roleEntity);
-    
+
     RoleResponseDto roleResponseDto = this.roleConverter.toRoleResponseDto(roleEntity);
     return ResponseDto.success(roleResponseDto);
   }
@@ -120,13 +124,15 @@ public class RoleServiceImpl implements RoleService {
   }
 
   @Override
-  public ResponseEntity<ResponseDto<RoleResponseDto>> removePermissions(Long id, RoleRemovePermissionsDto roleRemovePermissionsDto) {
+  public ResponseEntity<ResponseDto<RoleResponseDto>> removePermissions(Long id,
+      RoleRemovePermissionsDto roleRemovePermissionsDto) {
     RoleEntity roleEntity = this.roleRepository.findById(id).orElse(null);
     if (roleEntity == null) {
       return ResponseDto.notFound("Role not found");
     }
 
-    List<PermissionEntity> permissionEntities = this.permissionRepository.findAllById(roleRemovePermissionsDto.getPermissionIds());
+    List<PermissionEntity> permissionEntities = this.permissionRepository
+        .findAllById(roleRemovePermissionsDto.getPermissionIds());
     if (permissionEntities.size() != roleRemovePermissionsDto.getPermissionIds().size()) {
       return ResponseDto.notFound("Some permissions not found");
     }

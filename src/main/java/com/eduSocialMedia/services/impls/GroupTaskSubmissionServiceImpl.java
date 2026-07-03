@@ -2,7 +2,6 @@ package com.eduSocialMedia.services.impls;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,21 +25,24 @@ import com.eduSocialMedia.services.GroupTaskSubmissionService;
 
 @Service
 public class GroupTaskSubmissionServiceImpl implements GroupTaskSubmissionService {
-  @Autowired
-  private GroupTaskSubmissionConverter groupTaskSubmissionConverter;
+  private final GroupTaskSubmissionConverter groupTaskSubmissionConverter;
+  private final GroupTaskSubmissionRepository groupTaskSubmissionRepository;
+  private final GroupTaskRepository groupTaskRepository;
+  private final UserRepository userRepository;
 
-  @Autowired
-  private GroupTaskSubmissionRepository groupTaskSubmissionRepository;
-
-  @Autowired
-  private GroupTaskRepository groupTaskRepository;
-
-  @Autowired
-  private UserRepository userRepository;
+  GroupTaskSubmissionServiceImpl(GroupTaskSubmissionConverter groupTaskSubmissionConverter,
+      GroupTaskSubmissionRepository groupTaskSubmissionRepository, GroupTaskRepository groupTaskRepository,
+      UserRepository userRepository) {
+    this.groupTaskSubmissionConverter = groupTaskSubmissionConverter;
+    this.groupTaskSubmissionRepository = groupTaskSubmissionRepository;
+    this.groupTaskRepository = groupTaskRepository;
+    this.userRepository = userRepository;
+  }
 
   @Override
   public ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> create(GroupTaskSubmissionCreateDto createDto) {
-    GroupTaskEntity groupTask = this.groupTaskRepository.findByIdAndIsDeletedFalse(createDto.getGroupTaskId()).orElse(null);
+    GroupTaskEntity groupTask = this.groupTaskRepository.findByIdAndIsDeletedFalse(createDto.getGroupTaskId())
+        .orElse(null);
     if (groupTask == null) {
       return ResponseDto.notFound("Group task not found");
     }
@@ -57,12 +59,14 @@ public class GroupTaskSubmissionServiceImpl implements GroupTaskSubmissionServic
 
     entity = this.groupTaskSubmissionRepository.save(entity);
 
-    GroupTaskSubmissionResponseDto responseDto = this.groupTaskSubmissionConverter.toGroupTaskSubmissionResponseDto(entity);
+    GroupTaskSubmissionResponseDto responseDto = this.groupTaskSubmissionConverter
+        .toGroupTaskSubmissionResponseDto(entity);
     return ResponseDto.created(responseDto);
   }
 
   @Override
-  public ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> update(Long id, GroupTaskSubmissionUpdateDto updateDto) {
+  public ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> update(Long id,
+      GroupTaskSubmissionUpdateDto updateDto) {
     GroupTaskSubmissionEntity entity = this.groupTaskSubmissionRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (entity == null) {
       return ResponseDto.notFound("Group task submission not found");
@@ -74,7 +78,8 @@ public class GroupTaskSubmissionServiceImpl implements GroupTaskSubmissionServic
     }
 
     if (updateDto.getGroupTaskId() != null) {
-      GroupTaskEntity groupTask = this.groupTaskRepository.findByIdAndIsDeletedFalse(updateDto.getGroupTaskId()).orElse(null);
+      GroupTaskEntity groupTask = this.groupTaskRepository.findByIdAndIsDeletedFalse(updateDto.getGroupTaskId())
+          .orElse(null);
       if (groupTask == null) {
         return ResponseDto.notFound("Group task not found");
       }
@@ -93,7 +98,8 @@ public class GroupTaskSubmissionServiceImpl implements GroupTaskSubmissionServic
 
     entity = this.groupTaskSubmissionRepository.save(entity);
 
-    GroupTaskSubmissionResponseDto responseDto = this.groupTaskSubmissionConverter.toGroupTaskSubmissionResponseDto(entity);
+    GroupTaskSubmissionResponseDto responseDto = this.groupTaskSubmissionConverter
+        .toGroupTaskSubmissionResponseDto(entity);
     return ResponseDto.success(responseDto);
   }
 
@@ -111,7 +117,8 @@ public class GroupTaskSubmissionServiceImpl implements GroupTaskSubmissionServic
   }
 
   @Override
-  public ResponseEntity<ResponseDto<ResponseSpecification<GroupTaskSubmissionResponseDto>>> find(GroupTaskSubmissionFindDto query, Pageable pageable) {
+  public ResponseEntity<ResponseDto<ResponseSpecification<GroupTaskSubmissionResponseDto>>> find(
+      GroupTaskSubmissionFindDto query, Pageable pageable) {
     Specification<GroupTaskSubmissionEntity> spec = this.groupTaskSubmissionRepository.hasCriteria(query);
     Page<GroupTaskSubmissionEntity> pageResult = this.groupTaskSubmissionRepository.findAll(spec, pageable);
 
@@ -141,7 +148,8 @@ public class GroupTaskSubmissionServiceImpl implements GroupTaskSubmissionServic
       return ResponseDto.notFound("Group task submission not found");
     }
 
-    GroupTaskSubmissionResponseDto responseDto = this.groupTaskSubmissionConverter.toGroupTaskSubmissionResponseDto(entity);
+    GroupTaskSubmissionResponseDto responseDto = this.groupTaskSubmissionConverter
+        .toGroupTaskSubmissionResponseDto(entity);
     return ResponseDto.success(responseDto);
   }
 

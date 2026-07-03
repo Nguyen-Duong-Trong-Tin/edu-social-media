@@ -2,7 +2,6 @@ package com.eduSocialMedia.services.impls;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,11 +22,13 @@ import com.eduSocialMedia.utils.ValidationUtil;
 
 @Service
 public class PermissionServiceImpl implements PermissionService {
-  @Autowired
-  private PermissionConverter permissionConverter;
+  private final PermissionConverter permissionConverter;
+  private final PermissionRepository permissionRepository;
 
-  @Autowired
-  private PermissionRepository permissionRepository;
+  PermissionServiceImpl(PermissionConverter permissionConverter, PermissionRepository permissionRepository) {
+    this.permissionConverter = permissionConverter;
+    this.permissionRepository = permissionRepository;
+  }
 
   @Override
   public ResponseEntity<ResponseDto<PermissionResponseDto>> create(PermissionCreateDto permissionCreateDto) {
@@ -109,8 +110,9 @@ public class PermissionServiceImpl implements PermissionService {
   }
 
   private String buildCode(String name) {
-    String code = name == null ? null : name.trim().toUpperCase().replaceAll("[^A-Z0-9]+", "_")
-        .replaceAll("^_|_$", "");
+    String code = name == null ? null
+        : name.trim().toUpperCase().replaceAll("[^A-Z0-9]+", "_")
+            .replaceAll("^_|_$", "");
     return ValidationUtil.isNullOrEmpty(code) ? name : code;
   }
 }

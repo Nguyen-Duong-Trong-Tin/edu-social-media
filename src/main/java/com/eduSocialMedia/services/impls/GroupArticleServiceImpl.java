@@ -2,7 +2,6 @@ package com.eduSocialMedia.services.impls;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,14 +23,16 @@ import com.eduSocialMedia.services.GroupArticleService;
 
 @Service
 public class GroupArticleServiceImpl implements GroupArticleService {
-  @Autowired
-  private GroupArticleConverter groupArticleConverter;
+  private final GroupArticleConverter groupArticleConverter;
+  private final GroupArticleRepository groupArticleRepository;
+  private final GroupRepository groupRepository;
 
-  @Autowired
-  private GroupArticleRepository groupArticleRepository;
-
-  @Autowired
-  private GroupRepository groupRepository;
+  GroupArticleServiceImpl(GroupArticleConverter groupArticleConverter, GroupArticleRepository groupArticleRepository,
+      GroupRepository groupRepository) {
+    this.groupArticleConverter = groupArticleConverter;
+    this.groupArticleRepository = groupArticleRepository;
+    this.groupRepository = groupRepository;
+  }
 
   @Override
   public ResponseEntity<ResponseDto<GroupArticleResponseDto>> create(GroupArticleCreateDto createDto) {
@@ -92,7 +93,8 @@ public class GroupArticleServiceImpl implements GroupArticleService {
   }
 
   @Override
-  public ResponseEntity<ResponseDto<ResponseSpecification<GroupArticleResponseDto>>> find(GroupArticleFindDto query, Pageable pageable) {
+  public ResponseEntity<ResponseDto<ResponseSpecification<GroupArticleResponseDto>>> find(GroupArticleFindDto query,
+      Pageable pageable) {
     Specification<GroupArticleEntity> spec = this.groupArticleRepository.hasCriteria(query);
     Page<GroupArticleEntity> pageResult = this.groupArticleRepository.findAll(spec, pageable);
 

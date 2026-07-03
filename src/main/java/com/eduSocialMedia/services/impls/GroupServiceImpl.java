@@ -2,7 +2,6 @@ package com.eduSocialMedia.services.impls;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,14 +23,16 @@ import com.eduSocialMedia.services.GroupService;
 
 @Service
 public class GroupServiceImpl implements GroupService {
-  @Autowired
-  private GroupConverter groupConverter;
+  private final GroupConverter groupConverter;
+  private final GroupRepository groupRepository;
+  private final GroupTopicRepository groupTopicRepository;
 
-  @Autowired
-  private GroupRepository groupRepository;
-
-  @Autowired
-  private GroupTopicRepository groupTopicRepository;
+  GroupServiceImpl(GroupConverter groupConverter, GroupRepository groupRepository,
+      GroupTopicRepository groupTopicRepository) {
+    this.groupConverter = groupConverter;
+    this.groupRepository = groupRepository;
+    this.groupTopicRepository = groupTopicRepository;
+  }
 
   @Override
   public ResponseEntity<ResponseDto<GroupResponseDto>> create(GroupCreateDto groupCreateDto) {
@@ -101,7 +102,8 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Override
-  public ResponseEntity<ResponseDto<ResponseSpecification<GroupResponseDto>>> find(GroupFindDto query, Pageable pageable) {
+  public ResponseEntity<ResponseDto<ResponseSpecification<GroupResponseDto>>> find(GroupFindDto query,
+      Pageable pageable) {
     Specification<GroupEntity> spec = this.groupRepository.hasCriteria(query);
     Page<GroupEntity> groupPage = this.groupRepository.findAll(spec, pageable);
 

@@ -1,7 +1,6 @@
 package com.eduSocialMedia.converters;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.eduSocialMedia.dtos.settingSidebarLinks.SettingSidebarLinkCreateDto;
@@ -11,8 +10,11 @@ import com.eduSocialMedia.repositories.entities.SettingSidebarLinkEntity;
 
 @Component
 public class SettingSidebarLinkConverter {
-  @Autowired
-  private ModelMapper modelMapper;
+  private final ModelMapper modelMapper;
+
+  SettingSidebarLinkConverter(ModelMapper modelMapper) {
+    this.modelMapper = modelMapper;
+  }
 
   public SettingSidebarLinkEntity toSettingSidebarLinkEntity(SettingSidebarLinkCreateDto dto) {
     return this.modelMapper.map(dto, SettingSidebarLinkEntity.class);

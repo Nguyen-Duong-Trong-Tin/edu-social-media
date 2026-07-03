@@ -1,7 +1,6 @@
 package com.eduSocialMedia.converters;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.eduSocialMedia.dtos.users.UserCreateDto;
@@ -11,8 +10,11 @@ import com.eduSocialMedia.repositories.entities.UserEntity;
 
 @Component
 public class UserConverter {
-  @Autowired
-  private ModelMapper modelMapper;
+  private final ModelMapper modelMapper;
+
+  UserConverter(ModelMapper modelMapper) {
+    this.modelMapper = modelMapper;
+  }
 
   public UserEntity toUserEntity(UserCreateDto userCreateDto) {
     return this.modelMapper.map(userCreateDto, UserEntity.class);

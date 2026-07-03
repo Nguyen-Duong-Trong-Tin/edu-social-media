@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.eduSocialMedia.enums.AuthTypeEnum;
@@ -18,11 +17,13 @@ import jakarta.servlet.http.HttpServletRequest;
 @Aspect
 @Component
 public class AuthAspect {
-  @Autowired
-  private HttpServletRequest request;
+  private final HttpServletRequest request;
+  private final JwtUtil jwtUtil;
 
-  @Autowired
-  private JwtUtil jwtUtil;
+  AuthAspect(HttpServletRequest request, JwtUtil jwtUtil) {
+    this.request = request;
+    this.jwtUtil = jwtUtil;
+  }
 
   @Before("@annotation(auth)")
   public void checkAuth(Auth auth) {

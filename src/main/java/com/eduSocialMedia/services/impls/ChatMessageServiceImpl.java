@@ -2,7 +2,6 @@ package com.eduSocialMedia.services.impls;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,17 +25,17 @@ import com.eduSocialMedia.services.ChatMessageService;
 
 @Service
 public class ChatMessageServiceImpl implements ChatMessageService {
-  @Autowired
-  private ChatMessageConverter chatMessageConverter;
+  private final ChatMessageConverter chatMessageConverter;
+  private final ChatMessageRepository chatMessageRepository;
+  private final UserRepository userRepository;
+  private final ChatRoomRepository chatRoomRepository;
 
-  @Autowired
-  private ChatMessageRepository chatMessageRepository;
-
-  @Autowired
-  private UserRepository userRepository;
-
-  @Autowired
-  private ChatRoomRepository chatRoomRepository;
+  ChatMessageServiceImpl(ChatMessageConverter chatMessageConverter, ChatMessageRepository chatMessageRepository, UserRepository userRepository, ChatRoomRepository chatRoomRepository) {
+    this.chatMessageConverter = chatMessageConverter;
+    this.chatMessageRepository = chatMessageRepository;
+    this.userRepository = userRepository;
+    this.chatRoomRepository = chatRoomRepository;
+  }
 
   @Override
   public ResponseEntity<ResponseDto<ChatMessageResponseDto>> create(ChatMessageCreateDto createDto) {

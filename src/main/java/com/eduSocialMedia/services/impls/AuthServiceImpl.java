@@ -4,7 +4,6 @@ import com.eduSocialMedia.converters.AccountConverter;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,20 +24,20 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class AuthServiceImpl implements AuthService {
-  @Autowired
-  private HttpServletRequest request;
+  private final HttpServletRequest request;
+  private final AccountConverter accountConverter;
+  private final PasswordEncoder passwordEncoder;
+  private final JwtUtil jwtUtil;
+  private final AccountRepository accountRepository;
 
-  @Autowired
-  private AccountConverter accountConverter;
-
-  @Autowired
-  private PasswordEncoder passwordEncoder;
-
-  @Autowired
-  private JwtUtil jwtUtil;
-
-  @Autowired
-  private AccountRepository accountRepository;
+  AuthServiceImpl(HttpServletRequest request, AccountConverter accountConverter, PasswordEncoder passwordEncoder,
+      JwtUtil jwtUtil, AccountRepository accountRepository) {
+    this.request = request;
+    this.accountConverter = accountConverter;
+    this.passwordEncoder = passwordEncoder;
+    this.jwtUtil = jwtUtil;
+    this.accountRepository = accountRepository;
+  }
 
   @Override
   public ResponseEntity<ResponseDto<AuthLoginResponseDto>> login(AuthLoginDto authLoginDto) {

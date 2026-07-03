@@ -2,7 +2,6 @@ package com.eduSocialMedia.services.impls;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -25,17 +24,18 @@ import com.eduSocialMedia.services.AccountService;
 
 @Service
 public class AccountServiceImpl implements AccountService {
-  @Autowired
-  private AccountConverter accountConverter;
+  private final AccountConverter accountConverter;
+  private final AccountRepository accountRepository;
+  private final RoleRepository roleRepository;
+  private final PasswordEncoder passwordEncoder;
 
-  @Autowired
-  private AccountRepository accountRepository;
-
-  @Autowired
-  private RoleRepository roleRepository;
-
-  @Autowired
-  private PasswordEncoder passwordEncoder;
+  AccountServiceImpl(AccountConverter accountConverter, AccountRepository accountRepository,
+      RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    this.accountConverter = accountConverter;
+    this.accountRepository = accountRepository;
+    this.roleRepository = roleRepository;
+    this.passwordEncoder = passwordEncoder;
+  }
 
   @Override
   public ResponseEntity<ResponseDto<AccountResponseDto>> create(AccountCreateDto accountCreateDto) {
@@ -92,7 +92,7 @@ public class AccountServiceImpl implements AccountService {
 
     accountEntity.setIsDeleted(true);
     this.accountRepository.save(accountEntity);
-    
+
     return ResponseDto.success(null);
   }
 

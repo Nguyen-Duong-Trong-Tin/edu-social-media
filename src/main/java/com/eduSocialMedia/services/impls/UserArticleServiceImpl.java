@@ -2,7 +2,6 @@ package com.eduSocialMedia.services.impls;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,14 +23,16 @@ import com.eduSocialMedia.services.UserArticleService;
 
 @Service
 public class UserArticleServiceImpl implements UserArticleService {
-  @Autowired
-  private UserArticleConverter userArticleConverter;
+  private final UserArticleConverter userArticleConverter;
+  private final UserArticleRepository userArticleRepository;
+  private final UserRepository userRepository;
 
-  @Autowired
-  private UserArticleRepository userArticleRepository;
-
-  @Autowired
-  private UserRepository userRepository;
+  UserArticleServiceImpl(UserArticleConverter userArticleConverter, UserArticleRepository userArticleRepository,
+      UserRepository userRepository) {
+    this.userArticleConverter = userArticleConverter;
+    this.userArticleRepository = userArticleRepository;
+    this.userRepository = userRepository;
+  }
 
   @Override
   public ResponseEntity<ResponseDto<UserArticleResponseDto>> create(UserArticleCreateDto createDto) {
@@ -92,7 +93,8 @@ public class UserArticleServiceImpl implements UserArticleService {
   }
 
   @Override
-  public ResponseEntity<ResponseDto<ResponseSpecification<UserArticleResponseDto>>> find(UserArticleFindDto query, Pageable pageable) {
+  public ResponseEntity<ResponseDto<ResponseSpecification<UserArticleResponseDto>>> find(UserArticleFindDto query,
+      Pageable pageable) {
     Specification<UserArticleEntity> spec = this.userArticleRepository.hasCriteria(query);
     Page<UserArticleEntity> pageResult = this.userArticleRepository.findAll(spec, pageable);
 

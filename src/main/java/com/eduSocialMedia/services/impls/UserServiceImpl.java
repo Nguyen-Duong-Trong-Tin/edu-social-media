@@ -2,7 +2,6 @@ package com.eduSocialMedia.services.impls;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,14 +22,15 @@ import com.eduSocialMedia.services.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
-  @Autowired
-  private UserConverter userConverter;
+  private final UserConverter userConverter;
+  private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
 
-  @Autowired
-  private UserRepository userRepository;
-
-  @Autowired
-  private PasswordEncoder passwordEncoder;
+  UserServiceImpl(UserConverter userConverter, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    this.userConverter = userConverter;
+    this.userRepository = userRepository;
+    this.passwordEncoder = passwordEncoder;
+  }
 
   @Override
   public ResponseEntity<ResponseDto<UserResponseDto>> create(UserCreateDto userCreateDto) {
@@ -85,7 +85,8 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public ResponseEntity<ResponseDto<ResponseSpecification<UserResponseDto>>> find(UserFindDto query, Pageable pageable) {
+  public ResponseEntity<ResponseDto<ResponseSpecification<UserResponseDto>>> find(UserFindDto query,
+      Pageable pageable) {
     Specification<UserEntity> userSpec = this.userRepository.hasCriteria(query);
     Page<UserEntity> userPage = this.userRepository.findAll(userSpec, pageable);
 

@@ -1,7 +1,6 @@
 package com.eduSocialMedia.converters;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.eduSocialMedia.dtos.roles.RoleCreateDto;
@@ -11,8 +10,11 @@ import com.eduSocialMedia.repositories.entities.RoleEntity;
 
 @Component
 public class RoleConverter {
-  @Autowired
-  private ModelMapper modelMapper;
+  private final ModelMapper modelMapper;
+
+  RoleConverter(ModelMapper modelMapper) {
+    this.modelMapper = modelMapper;
+  }
 
   public RoleEntity toRoleEntity(RoleCreateDto roleCreateDto) {
     return this.modelMapper.map(roleCreateDto, RoleEntity.class);

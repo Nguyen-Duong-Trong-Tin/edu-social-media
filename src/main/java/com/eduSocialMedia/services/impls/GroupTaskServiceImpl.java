@@ -2,7 +2,6 @@ package com.eduSocialMedia.services.impls;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,14 +23,16 @@ import com.eduSocialMedia.services.GroupTaskService;
 
 @Service
 public class GroupTaskServiceImpl implements GroupTaskService {
-  @Autowired
-  private GroupTaskConverter groupTaskConverter;
+  private final GroupTaskConverter groupTaskConverter;
+  private final GroupTaskRepository groupTaskRepository;
+  private final GroupRepository groupRepository;
 
-  @Autowired
-  private GroupTaskRepository groupTaskRepository;
-
-  @Autowired
-  private GroupRepository groupRepository;
+  GroupTaskServiceImpl(GroupTaskConverter groupTaskConverter, GroupTaskRepository groupTaskRepository,
+      GroupRepository groupRepository) {
+    this.groupTaskConverter = groupTaskConverter;
+    this.groupTaskRepository = groupTaskRepository;
+    this.groupRepository = groupRepository;
+  }
 
   @Override
   public ResponseEntity<ResponseDto<GroupTaskResponseDto>> create(GroupTaskCreateDto createDto) {
@@ -92,7 +93,8 @@ public class GroupTaskServiceImpl implements GroupTaskService {
   }
 
   @Override
-  public ResponseEntity<ResponseDto<ResponseSpecification<GroupTaskResponseDto>>> find(GroupTaskFindDto query, Pageable pageable) {
+  public ResponseEntity<ResponseDto<ResponseSpecification<GroupTaskResponseDto>>> find(GroupTaskFindDto query,
+      Pageable pageable) {
     Specification<GroupTaskEntity> spec = this.groupTaskRepository.hasCriteria(query);
     Page<GroupTaskEntity> pageResult = this.groupTaskRepository.findAll(spec, pageable);
 
