@@ -123,7 +123,7 @@ INSERT INTO setting_sidebar_links (name, path, icon, is_exact, sort_order, creat
 ('Article users', '/article-users', 'UserPen', FALSE, 7, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- users
-INSERT INTO users (full_name, slug, user_name, password, avatar, cover_photo, bio, is_active, is_deleted, created_at, updated_at) VALUES
+INSERT INTO users (full_name, slug, email, password, avatar, cover_photo, bio, is_active, is_deleted, created_at, updated_at) VALUES
 ('Alice Walker', 'alice-walker', 'alice@example.com', '$2a$10$abcdefghijklmnopqrstuv', 'avatar_alice.jpg', 'cover_alice.jpg', 'Passionate about coding and coffee.', TRUE, FALSE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ('Bob Smith', 'bob-smith', 'bob@example.com', '$2a$10$abcdefghijklmnopqrstuv', 'avatar_bob.jpg', NULL, 'Math tutor and puzzle enthusiast.', TRUE, FALSE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ('Charlie Davis', 'charlie-davis', 'charlie@example.com', '$2a$10$abcdefghijklmnopqrstuv', NULL, 'cover_charlie.jpg', 'Lifelong learner.', TRUE, FALSE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),

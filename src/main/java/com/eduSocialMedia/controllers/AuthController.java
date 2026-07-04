@@ -12,6 +12,10 @@ import com.eduSocialMedia.dtos.auth.AuthLoginDto;
 import com.eduSocialMedia.dtos.auth.AuthLoginResponseDto;
 import com.eduSocialMedia.dtos.auth.AuthRefreshTokenDto;
 import com.eduSocialMedia.dtos.auth.AuthRefreshTokenResponseDto;
+import com.eduSocialMedia.dtos.auth.AuthRegisterDto;
+import com.eduSocialMedia.dtos.auth.AuthRegisterResponseDto;
+import com.eduSocialMedia.dtos.auth.AuthUserLoginDto;
+import com.eduSocialMedia.dtos.auth.AuthUserLoginResponseDto;
 import com.eduSocialMedia.services.AuthService;
 
 import jakarta.validation.Valid;
@@ -29,6 +33,18 @@ public class AuthController {
   public ResponseEntity<ResponseDto<AuthLoginResponseDto>> login(
       @Valid @RequestBody AuthLoginDto authLoginDto) {
     return this.authService.login(authLoginDto);
+  }
+
+  @PostMapping("/user/login")
+  public ResponseEntity<ResponseDto<AuthUserLoginResponseDto>> loginUser(
+      @Valid @RequestBody AuthUserLoginDto authLoginDto) {
+    return this.authService.loginUser(authLoginDto);
+  }
+
+  @PostMapping("/register")
+  public ResponseEntity<ResponseDto<AuthRegisterResponseDto>> register(
+      @Valid @RequestBody AuthRegisterDto authRegisterDto) {
+    return this.authService.register(authRegisterDto);
   }
 
   @PostMapping("/refresh-token")
