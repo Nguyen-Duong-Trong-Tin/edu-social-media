@@ -1,8 +1,6 @@
 package com.eduSocialMedia.dtos.chatMessages;
 
 import com.eduSocialMedia.dtos.BaseResponseDto;
-import com.eduSocialMedia.dtos.chatRooms.ChatRoomResponseDto;
-import com.eduSocialMedia.dtos.users.UserResponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +18,6 @@ public class ChatMessageResponseDto extends BaseResponseDto {
   private String images;
   private String videos;
   private String materials;
-  private UserResponseDto user;
-  private ChatRoomResponseDto chatRoom;
+  private String userId;
+  private String chatRoomId;
 }

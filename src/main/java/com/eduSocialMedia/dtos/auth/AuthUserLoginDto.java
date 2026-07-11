@@ -1,5 +1,6 @@
 package com.eduSocialMedia.dtos.auth;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +13,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AuthUserLoginDto {
+  @NotBlank(message = "email is not blank")
   private String email;
+
+  @NotBlank(message = "Password is not blank")
   private String password;
 }

@@ -20,7 +20,6 @@ import com.eduSocialMedia.dtos.auth.AuthRegisterDto;
 import com.eduSocialMedia.dtos.auth.AuthRegisterResponseDto;
 import com.eduSocialMedia.dtos.auth.AuthUserLoginDto;
 import com.eduSocialMedia.dtos.auth.AuthUserLoginResponseDto;
-import com.eduSocialMedia.dtos.users.UserResponseDto;
 import com.eduSocialMedia.enums.AuthTypeEnum;
 import com.eduSocialMedia.repositories.AccountRepository;
 import com.eduSocialMedia.repositories.UserRepository;
