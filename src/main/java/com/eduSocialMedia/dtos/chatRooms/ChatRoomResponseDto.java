@@ -1,7 +1,6 @@
 package com.eduSocialMedia.dtos.chatRooms;
 
 import com.eduSocialMedia.dtos.BaseResponseDto;
-import com.eduSocialMedia.dtos.groups.GroupResponseDto;
 import com.eduSocialMedia.enums.ChatRoomTypeEnum;
 
 import lombok.AllArgsConstructor;
@@ -21,5 +20,5 @@ public class ChatRoomResponseDto extends BaseResponseDto {
   private ChatRoomTypeEnum type;
   private String avatar;
   private Boolean isActive;
-  private GroupResponseDto group;
+  private Long groupId;
 }

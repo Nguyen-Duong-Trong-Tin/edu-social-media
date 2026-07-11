@@ -18,6 +18,6 @@ public class ChatMessageResponseDto extends BaseResponseDto {
   private String images;
   private String videos;
   private String materials;
-  private String userId;
-  private String chatRoomId;
+  private Long userId;
+  private Long chatRoomId;
 }

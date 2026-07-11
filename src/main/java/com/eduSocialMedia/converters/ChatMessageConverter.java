@@ -23,10 +23,10 @@ public class ChatMessageConverter {
   public ChatMessageResponseDto toChatMessageResponseDto(ChatMessageEntity entity) {
     ChatMessageResponseDto responseDto = this.modelMapper.map(entity, ChatMessageResponseDto.class);
     if (entity.getUser() != null) {
-      responseDto.setUserId(String.valueOf(entity.getUser().getId()));
+      responseDto.setUserId(entity.getUser().getId());
     }
     if (entity.getChatRoom() != null) {
-      responseDto.setChatRoomId(String.valueOf(entity.getChatRoom().getId()));
+      responseDto.setChatRoomId(entity.getChatRoom().getId());
     }
     return responseDto;
   }

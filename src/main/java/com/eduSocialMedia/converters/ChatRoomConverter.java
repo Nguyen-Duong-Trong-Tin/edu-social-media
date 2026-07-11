@@ -21,7 +21,11 @@ public class ChatRoomConverter {
   }
 
   public ChatRoomResponseDto toChatRoomResponseDto(ChatRoomEntity entity) {
-    return this.modelMapper.map(entity, ChatRoomResponseDto.class);
+    ChatRoomResponseDto responseDto = this.modelMapper.map(entity, ChatRoomResponseDto.class);
+    if (entity.getGroup() != null) {
+      responseDto.setGroupId(entity.getGroup().getId());
+    }
+    return responseDto;
   }
 
   public ChatRoomEntity copyToChatRoomEntity(ChatRoomUpdateDto updateDto, ChatRoomEntity entity) {
