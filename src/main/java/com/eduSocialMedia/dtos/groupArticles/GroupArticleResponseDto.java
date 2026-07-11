@@ -1,7 +1,6 @@
 package com.eduSocialMedia.dtos.groupArticles;
 
 import com.eduSocialMedia.dtos.BaseResponseDto;
-import com.eduSocialMedia.dtos.groups.GroupResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,5 +19,5 @@ public class GroupArticleResponseDto extends BaseResponseDto {
   private String images;
   private String videos;
   private Boolean isActive;
-  private GroupResponseDto group;
+  private Long groupId;
 }

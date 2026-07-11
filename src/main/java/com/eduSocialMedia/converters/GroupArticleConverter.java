@@ -21,7 +21,11 @@ public class GroupArticleConverter {
   }
 
   public GroupArticleResponseDto toGroupArticleResponseDto(GroupArticleEntity entity) {
-    return this.modelMapper.map(entity, GroupArticleResponseDto.class);
+    GroupArticleResponseDto responseDto = this.modelMapper.map(entity, GroupArticleResponseDto.class);
+    if (entity.getGroup() != null) {
+      responseDto.setGroupId(entity.getGroup().getId());
+    }
+    return responseDto;
   }
 
   public GroupArticleEntity copyToGroupArticleEntity(GroupArticleUpdateDto updateDto, GroupArticleEntity entity) {
