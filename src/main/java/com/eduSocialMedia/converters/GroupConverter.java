@@ -21,7 +21,11 @@ public class GroupConverter {
   }
 
   public GroupResponseDto toGroupResponseDto(GroupEntity groupEntity) {
-    return this.modelMapper.map(groupEntity, GroupResponseDto.class);
+    GroupResponseDto responseDto = this.modelMapper.map(groupEntity, GroupResponseDto.class);
+    if (groupEntity.getGroupTopic() != null) {
+      responseDto.setGroupTopicId(groupEntity.getGroupTopic().getId());
+    }
+    return responseDto;
   }
 
   public GroupEntity copyToGroupEntity(GroupUpdateDto groupUpdateDto, GroupEntity groupEntity) {
