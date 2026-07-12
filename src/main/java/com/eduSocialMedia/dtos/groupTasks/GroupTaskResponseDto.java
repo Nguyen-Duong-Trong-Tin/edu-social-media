@@ -3,7 +3,6 @@ package com.eduSocialMedia.dtos.groupTasks;
 import java.sql.Date;
 
 import com.eduSocialMedia.dtos.BaseResponseDto;
-import com.eduSocialMedia.dtos.groups.GroupResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,5 +22,5 @@ public class GroupTaskResponseDto extends BaseResponseDto {
   private String videos;
   private Date deadline;
   private Boolean isActive;
-  private GroupResponseDto group;
+  private Long groupId;
 }
