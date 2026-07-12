@@ -21,7 +21,14 @@ public class GroupTaskSubmissionConverter {
   }
 
   public GroupTaskSubmissionResponseDto toGroupTaskSubmissionResponseDto(GroupTaskSubmissionEntity entity) {
-    return this.modelMapper.map(entity, GroupTaskSubmissionResponseDto.class);
+    GroupTaskSubmissionResponseDto responseDto = this.modelMapper.map(entity, GroupTaskSubmissionResponseDto.class);
+    if (entity.getGroupTask() != null) {
+      responseDto.setGroupTaskId(entity.getGroupTask().getId());
+    }
+    if (entity.getUser() != null) {
+      responseDto.setUserId(entity.getUser().getId());
+    }
+    return responseDto;
   }
 
   public GroupTaskSubmissionEntity copyToGroupTaskSubmissionEntity(GroupTaskSubmissionUpdateDto updateDto, GroupTaskSubmissionEntity entity) {

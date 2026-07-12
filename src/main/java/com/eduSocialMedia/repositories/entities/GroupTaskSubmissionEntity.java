@@ -2,6 +2,7 @@ package com.eduSocialMedia.repositories.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -49,11 +50,11 @@ public class GroupTaskSubmissionEntity extends BaseEntity {
   @Builder.Default
   private Boolean isDeleted = false;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "group_task_id", nullable = false)
   private GroupTaskEntity groupTask;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(nullable = false)
   private UserEntity user;
 }
