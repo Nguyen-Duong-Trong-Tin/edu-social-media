@@ -21,7 +21,11 @@ public class AccountConverter {
   }
 
   public AccountResponseDto toAccountResponseDto(AccountEntity accountEntity) {
-    return this.modelMapper.map(accountEntity, AccountResponseDto.class);
+    AccountResponseDto responseDto = this.modelMapper.map(accountEntity, AccountResponseDto.class);
+    if (accountEntity.getRole() != null) {
+      responseDto.setRoleId(accountEntity.getRole().getId());
+    }
+    return responseDto;
   }
 
   public AccountEntity copyToAccountEntity(AccountUpdateDto accountUpdateDto,

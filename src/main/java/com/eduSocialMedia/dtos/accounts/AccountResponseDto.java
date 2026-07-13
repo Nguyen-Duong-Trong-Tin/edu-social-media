@@ -1,7 +1,6 @@
 package com.eduSocialMedia.dtos.accounts;
 
 import com.eduSocialMedia.dtos.BaseResponseDto;
-import com.eduSocialMedia.dtos.roles.RoleResponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,5 +18,5 @@ public class AccountResponseDto extends BaseResponseDto {
   private String userName;
   private String avatar;
   private Boolean isActive;
-  private RoleResponseDto role;
+  private Long roleId;
 }
