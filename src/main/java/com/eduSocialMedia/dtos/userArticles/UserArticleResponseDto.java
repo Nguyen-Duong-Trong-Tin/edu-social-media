@@ -1,7 +1,6 @@
 package com.eduSocialMedia.dtos.userArticles;
 
 import com.eduSocialMedia.dtos.BaseResponseDto;
-import com.eduSocialMedia.dtos.users.UserResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,5 +19,5 @@ public class UserArticleResponseDto extends BaseResponseDto {
   private String images;
   private String videos;
   private Boolean isActive;
-  private UserResponseDto user;
+  private Long userId;
 }

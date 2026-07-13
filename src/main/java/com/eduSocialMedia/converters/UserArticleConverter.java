@@ -21,7 +21,11 @@ public class UserArticleConverter {
   }
 
   public UserArticleResponseDto toUserArticleResponseDto(UserArticleEntity entity) {
-    return this.modelMapper.map(entity, UserArticleResponseDto.class);
+    UserArticleResponseDto responseDto = this.modelMapper.map(entity, UserArticleResponseDto.class);
+    if (entity.getUser() != null) {
+      responseDto.setUserId(entity.getUser().getId());
+    }
+    return responseDto;
   }
 
   public UserArticleEntity copyToUserArticleEntity(UserArticleUpdateDto updateDto, UserArticleEntity entity) {
