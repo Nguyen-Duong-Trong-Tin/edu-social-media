@@ -6,12 +6,15 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.eduSocialMedia.annotations.Auth;
 import com.eduSocialMedia.dtos.ResponseDto;
@@ -20,6 +23,7 @@ import com.eduSocialMedia.dtos.users.UserCreateDto;
 import com.eduSocialMedia.dtos.users.UserFindDto;
 import com.eduSocialMedia.dtos.users.UserResponseDto;
 import com.eduSocialMedia.dtos.users.UserUpdateDto;
+import com.eduSocialMedia.dtos.users.UserUploadDto;
 import com.eduSocialMedia.enums.AuthTypeEnum;
 import com.eduSocialMedia.services.UserService;
 
@@ -40,8 +44,14 @@ public class UserController {
     return this.userService.create(userCreateDto);
   }
 
+  @PostMapping("/upload")
+  @Auth({ AuthTypeEnum.ACCOUNT, AuthTypeEnum.USER })
+  public ResponseEntity<ResponseDto<UserResponseDto>> upload(@Valid @ModelAttribute UserUploadDto userUploadDto, @RequestParam MultipartFile file) {
+    return this.userService.upload(userUploadDto, file);
+  }
+
   @PatchMapping("/{id}")
-  @Auth({ AuthTypeEnum.ACCOUNT })
+  @Auth({ AuthTypeEnum.ACCOUNT, AuthTypeEnum.USER })
   public ResponseEntity<ResponseDto<UserResponseDto>> update(@PathVariable Long id,
       @Valid @RequestBody UserUpdateDto userUpdateDto) {
     return this.userService.update(id, userUpdateDto);

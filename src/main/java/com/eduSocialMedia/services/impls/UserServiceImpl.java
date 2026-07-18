@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.eduSocialMedia.converters.UserConverter;
 import com.eduSocialMedia.dtos.ResponseDto;
@@ -16,20 +16,28 @@ import com.eduSocialMedia.dtos.users.UserCreateDto;
 import com.eduSocialMedia.dtos.users.UserFindDto;
 import com.eduSocialMedia.dtos.users.UserResponseDto;
 import com.eduSocialMedia.dtos.users.UserUpdateDto;
+import com.eduSocialMedia.dtos.users.UserUploadDto;
 import com.eduSocialMedia.repositories.UserRepository;
 import com.eduSocialMedia.repositories.entities.UserEntity;
+import com.eduSocialMedia.services.CloudinaryService;
 import com.eduSocialMedia.services.UserService;
+import com.eduSocialMedia.utils.SecurityUtil;
 
 @Service
 public class UserServiceImpl implements UserService {
   private final UserConverter userConverter;
+  private final CloudinaryService cloudinaryService;
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
+  private final SecurityUtil securityUtil;
 
-  UserServiceImpl(UserConverter userConverter, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+  UserServiceImpl(UserConverter userConverter, CloudinaryService cloudinaryService, UserRepository userRepository,
+      PasswordEncoder passwordEncoder, SecurityUtil securityUtil) {
     this.userConverter = userConverter;
+    this.cloudinaryService = cloudinaryService;
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
+    this.securityUtil = securityUtil;
   }
 
   @Override
@@ -52,7 +60,50 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public ResponseEntity<ResponseDto<UserResponseDto>> upload(UserUploadDto userUploadDto, MultipartFile file) {
+    UserEntity userEntity = this.userRepository.findByIdAndIsDeletedFalse(userUploadDto.getUserId()).orElse(null);
+    if (userEntity == null) {
+      return ResponseDto.notFound("User not found");
+    }
+
+    String oldUrl = null;
+    switch (userUploadDto.getType()) {
+      case AVATAR:
+        oldUrl = userEntity.getAvatar();
+        break;
+      case COVER_PHOTO:
+        oldUrl = userEntity.getCoverPhoto();
+        break;
+      default:
+        return ResponseDto.badRequest(List.of("Invalid upload type"));
+    }
+
+    if (oldUrl != null && !oldUrl.trim().isEmpty()) {
+      this.cloudinaryService.deleteFileIfExists(oldUrl);
+    }
+
+    String url = this.cloudinaryService.uploadFile(file);
+    switch (userUploadDto.getType()) {
+      case AVATAR:
+        userEntity.setAvatar(url);
+        break;
+      case COVER_PHOTO:
+        userEntity.setCoverPhoto(url);
+        break;
+    }
+
+    userEntity = this.userRepository.save(userEntity);
+    UserResponseDto userResponseDto = this.userConverter.toUserResponseDto(userEntity);
+    return ResponseDto.success(userResponseDto);
+  }
+
+  @Override
   public ResponseEntity<ResponseDto<UserResponseDto>> update(Long id, UserUpdateDto userUpdateDto) {
+    ResponseEntity<ResponseDto<UserResponseDto>> checkPermission = this.securityUtil.validateUserOwnership(id);
+    if (checkPermission != null) {
+      return checkPermission;
+    }
+
     UserEntity userEntity = this.userRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (userEntity == null) {
       return ResponseDto.notFound("User not found");

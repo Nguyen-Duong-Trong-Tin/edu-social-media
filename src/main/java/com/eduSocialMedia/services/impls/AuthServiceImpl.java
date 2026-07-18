@@ -20,6 +20,7 @@ import com.eduSocialMedia.dtos.auth.AuthRegisterDto;
 import com.eduSocialMedia.dtos.auth.AuthRegisterResponseDto;
 import com.eduSocialMedia.dtos.auth.AuthUserLoginDto;
 import com.eduSocialMedia.dtos.auth.AuthUserLoginResponseDto;
+import com.eduSocialMedia.dtos.users.UserResponseDto;
 import com.eduSocialMedia.enums.AuthTypeEnum;
 import com.eduSocialMedia.repositories.AccountRepository;
 import com.eduSocialMedia.repositories.UserRepository;
@@ -165,6 +166,31 @@ public class AuthServiceImpl implements AuthService {
     }
 
     return ResponseDto.success(this.accountConverter.toAccountResponseDto(accountEntity));
+  }
+
+  @Override
+  public ResponseEntity<ResponseDto<UserResponseDto>> userMe() {
+    String authHeader = request.getHeader("Authorization");
+    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+      return ResponseDto.unauthorized();
+    }
+    String accessToken = authHeader.substring(7);
+
+    Map<String, Object> validationStatusAC = jwtUtil.validateAndExtractAC(accessToken);
+    if (!"success".equals(validationStatusAC.get("status"))) {
+      return ResponseDto.unauthorized();
+    }
+
+    @SuppressWarnings("unchecked")
+    Map<String, String> userData = (Map<String, String>) validationStatusAC.get("data");
+    String email = userData.get("email");
+
+    UserEntity userEntity = this.userRepository.findByEmail(email).orElse(null);
+    if (userEntity == null) {
+      return ResponseDto.notFound("User not found");
+    }
+
+    return ResponseDto.success(this.userConverter.toUserResponseDto(userEntity));
   }
 
   @Override

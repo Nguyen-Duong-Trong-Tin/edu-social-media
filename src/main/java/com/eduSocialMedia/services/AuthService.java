@@ -12,6 +12,7 @@ import com.eduSocialMedia.dtos.auth.AuthRegisterDto;
 import com.eduSocialMedia.dtos.auth.AuthRegisterResponseDto;
 import com.eduSocialMedia.dtos.auth.AuthUserLoginDto;
 import com.eduSocialMedia.dtos.auth.AuthUserLoginResponseDto;
+import com.eduSocialMedia.dtos.users.UserResponseDto;
 
 public interface AuthService {
   ResponseEntity<ResponseDto<AuthLoginResponseDto>> login(AuthLoginDto authLoginDto);
@@ -23,6 +24,8 @@ public interface AuthService {
   ResponseEntity<ResponseDto<AuthRefreshTokenResponseDto>> refreshToken(AuthRefreshTokenDto authRefreshTokenDto);
 
   ResponseEntity<ResponseDto<AccountResponseDto>> me();
+
+  ResponseEntity<ResponseDto<UserResponseDto>> userMe();
 
   ResponseEntity<ResponseDto<Boolean>> verifyToken();
 }

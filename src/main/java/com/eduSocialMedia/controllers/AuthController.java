@@ -58,6 +58,11 @@ public class AuthController {
     return this.authService.me();
   }
 
+  @PostMapping("/user/me")
+  public ResponseEntity<ResponseDto<com.eduSocialMedia.dtos.users.UserResponseDto>> userMe() {
+    return this.authService.userMe();
+  }
+
   @PostMapping("/verify-token")
   public ResponseEntity<ResponseDto<Boolean>> verifyToken() {
     return this.authService.verifyToken();
