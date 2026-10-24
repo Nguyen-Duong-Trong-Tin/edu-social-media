@@ -22,7 +22,8 @@ public class UserArticleRepositoryCustomImpl implements UserArticleRepositoryCus
       List<Predicate> predicates = new ArrayList<>();
 
       QueryUtil.addEqualPredicate(root, criteriaBuilder, predicates, "isDeleted", false);
-      QueryUtil.addLikePredicate(root, criteriaBuilder, predicates, "name", query.getName());
+      QueryUtil.addLikePredicate(root, criteriaBuilder, predicates, "content", query.getContent());
+      QueryUtil.addEqualPredicate(root, criteriaBuilder, predicates, "status", query.getStatus());
       QueryUtil.addEqualPredicate(root, criteriaBuilder, predicates, "isActive", query.getIsActive());
 
       if (query.getUserId() != null) {

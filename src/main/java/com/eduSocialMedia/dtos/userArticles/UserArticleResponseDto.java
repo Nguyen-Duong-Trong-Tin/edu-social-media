@@ -1,6 +1,7 @@
 package com.eduSocialMedia.dtos.userArticles;
 
 import com.eduSocialMedia.dtos.BaseResponseDto;
+import com.eduSocialMedia.enums.UserArticleStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,11 +14,10 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 public class UserArticleResponseDto extends BaseResponseDto {
-  private String name;
-  private String slug;
-  private String description;
+  private String content;
   private String images;
   private String videos;
+  private UserArticleStatusEnum status;
   private Boolean isActive;
   private Long userId;
 }

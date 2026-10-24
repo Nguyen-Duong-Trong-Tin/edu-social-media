@@ -1,6 +1,6 @@
 package com.eduSocialMedia.dtos.userArticles;
 
-import jakarta.validation.constraints.Size;
+import com.eduSocialMedia.enums.UserArticleStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,10 +13,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserArticleUpdateDto {
-  @Size(max = 255, message = "User article name maximum length is 255 characters")
-  private String name;
+  private String content;
 
-  private String description;
+  private UserArticleStatusEnum status;
 
   private Boolean isActive;
 

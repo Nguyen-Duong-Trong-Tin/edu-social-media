@@ -1,5 +1,6 @@
 package com.eduSocialMedia.dtos.userArticles;
 
+import com.eduSocialMedia.enums.UserArticleStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserArticleFindDto {
-  private String name;
+  private String content;
+  private UserArticleStatusEnum status;
   private Boolean isActive;
   private Long userId;
   private String userName;

@@ -1,10 +1,18 @@
 package com.eduSocialMedia.repositories.entities;
 
+import java.util.List;
+
+import com.eduSocialMedia.enums.UserArticleStatusEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,20 +29,18 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 public class UserArticleEntity extends BaseEntity {
-  @Column(nullable = false)
-  private String name;
-
-  @Column(name = "slug", nullable = false, unique = true)
-  private String slug;
-
   @Column(columnDefinition = "TEXT")
-  private String description;
+  private String content;
 
   @Column(columnDefinition = "TEXT")
   private String images;
 
   @Column(columnDefinition = "TEXT")
   private String videos;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private UserArticleStatusEnum status;
 
   @Column(name = "is_active")
   @Builder.Default
@@ -47,4 +53,8 @@ public class UserArticleEntity extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(nullable = false)
   private UserEntity user;
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "userArticle")
+  private List<UserArticleFileEntity> userArticleFiles;
 }
