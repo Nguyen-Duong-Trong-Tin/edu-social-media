@@ -61,6 +61,11 @@ public class AdminUserServiceImpl implements AdminUserService {
 
   @Override
   public ResponseEntity<ResponseDto<UserResponseDto>> upload(UserUploadDto userUploadDto, MultipartFile file) {
+    String contentType = file.getContentType();
+    if (contentType == null || !contentType.startsWith("image/")) {
+      return ResponseDto.badRequest(List.of("File must be an image"));
+    }
+
     UserEntity userEntity = this.userRepository.findByIdAndIsDeletedFalse(userUploadDto.getUserId()).orElse(null);
     if (userEntity == null) {
       return ResponseDto.notFound("User not found");
@@ -78,10 +83,6 @@ public class AdminUserServiceImpl implements AdminUserService {
         return ResponseDto.badRequest(List.of("Invalid upload type"));
     }
 
-    if (oldUrl != null && !oldUrl.trim().isEmpty()) {
-      this.cloudinaryService.deleteFileIfExists(oldUrl);
-    }
-
     String url = this.cloudinaryService.uploadFile(file);
     switch (userUploadDto.getType()) {
       case AVATAR:
@@ -93,6 +94,16 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     userEntity = this.userRepository.save(userEntity);
+
+    // Only remove the old image once the new one is uploaded and saved
+    if (oldUrl != null && !oldUrl.trim().isEmpty()) {
+      try {
+        this.cloudinaryService.deleteFileIfExists(oldUrl);
+      } catch (RuntimeException e) {
+        // New image is already saved; an orphaned old file should not fail the request
+      }
+    }
+
     UserResponseDto userResponseDto = this.userConverter.toUserResponseDto(userEntity);
     return ResponseDto.success(userResponseDto);
   }
