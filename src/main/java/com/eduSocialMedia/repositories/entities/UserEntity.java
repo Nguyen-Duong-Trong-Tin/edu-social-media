@@ -50,6 +50,10 @@ public class UserEntity extends BaseEntity {
   @Builder.Default
   private Boolean isDeleted = false;
 
+  @Column(name = "token_version", nullable = false)
+  @Builder.Default
+  private Integer tokenVersion = 0;
+
   @OneToMany(mappedBy = "user")
   private List<UserArticleEntity> userArticles;
 

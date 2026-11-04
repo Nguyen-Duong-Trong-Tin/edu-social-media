@@ -35,7 +35,14 @@ public class JwtUtil {
   @Value("${jwt.expiration_ms_rf}")
   private Long expirationMsRF;
 
-  private String generateToken(String email, String role, String signingKey, Long expirationMs) {
+  private final TokenVersionUtil tokenVersionUtil;
+
+  public JwtUtil(TokenVersionUtil tokenVersionUtil) {
+    this.tokenVersionUtil = tokenVersionUtil;
+  }
+
+  private String generateToken(String email, String role, Integer tokenVersion, String signingKey,
+      Long expirationMs) {
     try {
       JWSHeader header = new JWSHeader(JWSAlgorithm.HS256);
 
@@ -45,6 +52,7 @@ public class JwtUtil {
           .issueTime(new Date())
           .expirationTime(new Date(System.currentTimeMillis() + expirationMs))
           .claim("role", role)
+          .claim("ver", tokenVersion)
           .build();
 
       SignedJWT signedJWT = new SignedJWT(header, claimsSet);
@@ -84,8 +92,6 @@ public class JwtUtil {
         return response;
       }
 
-      response.put("status", "success");
-
       Map<String, String> userData = new HashMap<>();
       userData.put("email", signedJWT.getJWTClaimsSet().getSubject());
 
@@ -94,6 +100,19 @@ public class JwtUtil {
         userData.put("role", role.toString());
       }
 
+      Object version = signedJWT.getJWTClaimsSet().getClaim("ver");
+      if (version != null) {
+        userData.put("ver", version.toString());
+      }
+
+      // Reject tokens of deleted/inactive users or issued before the last revoke (logout, delete)
+      if (!this.tokenVersionUtil.isCurrent(userData.get("email"), userData.get("role"), userData.get("ver"))) {
+        response.put("status", "revoked");
+        response.put("data", null);
+        return response;
+      }
+
+      response.put("status", "success");
       response.put("data", userData);
       return response;
 
@@ -104,12 +123,12 @@ public class JwtUtil {
     }
   }
 
-  public String generateTokenAC(String email, String role) {
-    return this.generateToken(email, role, signingKeyAC, expirationMsAC);
+  public String generateTokenAC(String email, String role, Integer tokenVersion) {
+    return this.generateToken(email, role, tokenVersion, signingKeyAC, expirationMsAC);
   }
 
-  public String generateTokenRF(String email, String role) {
-    return this.generateToken(email, role, signingKeyRF, expirationMsRF);
+  public String generateTokenRF(String email, String role, Integer tokenVersion) {
+    return this.generateToken(email, role, tokenVersion, signingKeyRF, expirationMsRF);
   }
 
   public Map<String, Object> validateAndExtractAC(String token) {

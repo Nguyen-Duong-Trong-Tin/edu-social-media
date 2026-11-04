@@ -41,6 +41,10 @@ public class AccountEntity extends BaseEntity {
   @Builder.Default
   private Boolean isDeleted = false;
 
+  @Column(name = "token_version", nullable = false)
+  @Builder.Default
+  private Integer tokenVersion = 0;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "role_id", nullable = false)
   private RoleEntity role;

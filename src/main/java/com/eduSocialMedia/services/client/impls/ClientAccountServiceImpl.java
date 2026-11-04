@@ -21,6 +21,7 @@ import com.eduSocialMedia.repositories.RoleRepository;
 import com.eduSocialMedia.repositories.entities.AccountEntity;
 import com.eduSocialMedia.repositories.entities.RoleEntity;
 import com.eduSocialMedia.services.client.ClientAccountService;
+import com.eduSocialMedia.utils.TokenVersionUtil;
 
 @Service
 public class ClientAccountServiceImpl implements ClientAccountService {
@@ -28,13 +29,15 @@ public class ClientAccountServiceImpl implements ClientAccountService {
   private final AccountRepository accountRepository;
   private final RoleRepository roleRepository;
   private final PasswordEncoder passwordEncoder;
+  private final TokenVersionUtil tokenVersionUtil;
 
   ClientAccountServiceImpl(AccountConverter accountConverter, AccountRepository accountRepository,
-      RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+      RoleRepository roleRepository, PasswordEncoder passwordEncoder, TokenVersionUtil tokenVersionUtil) {
     this.accountConverter = accountConverter;
     this.accountRepository = accountRepository;
     this.roleRepository = roleRepository;
     this.passwordEncoder = passwordEncoder;
+    this.tokenVersionUtil = tokenVersionUtil;
   }
 
   @Override
@@ -91,7 +94,7 @@ public class ClientAccountServiceImpl implements ClientAccountService {
     }
 
     accountEntity.setIsDeleted(true);
-    this.accountRepository.save(accountEntity);
+    this.tokenVersionUtil.revokeTokens(accountEntity);
 
     return ResponseDto.success(null);
   }

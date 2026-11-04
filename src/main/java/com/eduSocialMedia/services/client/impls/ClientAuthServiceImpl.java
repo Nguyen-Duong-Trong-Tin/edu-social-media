@@ -28,6 +28,7 @@ import com.eduSocialMedia.repositories.entities.AccountEntity;
 import com.eduSocialMedia.repositories.entities.UserEntity;
 import com.eduSocialMedia.services.client.ClientAuthService;
 import com.eduSocialMedia.utils.JwtUtil;
+import com.eduSocialMedia.utils.TokenVersionUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -40,10 +41,12 @@ public class ClientAuthServiceImpl implements ClientAuthService {
   private final JwtUtil jwtUtil;
   private final AccountRepository accountRepository;
   private final UserRepository userRepository;
+  private final TokenVersionUtil tokenVersionUtil;
 
   ClientAuthServiceImpl(HttpServletRequest request, AccountConverter accountConverter, UserConverter userConverter,
       PasswordEncoder passwordEncoder,
-      JwtUtil jwtUtil, AccountRepository accountRepository, UserRepository userRepository) {
+      JwtUtil jwtUtil, AccountRepository accountRepository, UserRepository userRepository,
+      TokenVersionUtil tokenVersionUtil) {
     this.request = request;
     this.accountConverter = accountConverter;
     this.userConverter = userConverter;
@@ -51,11 +54,13 @@ public class ClientAuthServiceImpl implements ClientAuthService {
     this.jwtUtil = jwtUtil;
     this.accountRepository = accountRepository;
     this.userRepository = userRepository;
+    this.tokenVersionUtil = tokenVersionUtil;
   }
 
   @Override
   public ResponseEntity<ResponseDto<AuthLoginResponseDto>> login(AuthLoginDto authLoginDto) {
-    AccountEntity accountEntity = this.accountRepository.findByUserName(authLoginDto.getUserName()).orElse(null);
+    AccountEntity accountEntity = this.accountRepository
+        .findByUserNameAndIsDeletedFalseAndIsActiveTrue(authLoginDto.getUserName()).orElse(null);
     if (accountEntity == null) {
       return ResponseDto.badRequest(List.of("User name or password is incorrect"));
     }
@@ -65,8 +70,10 @@ public class ClientAuthServiceImpl implements ClientAuthService {
       return ResponseDto.badRequest(List.of("User name or password is incorrect"));
     }
 
-    String accessToken = this.jwtUtil.generateTokenAC(accountEntity.getUserName(), AuthTypeEnum.ACCOUNT.name());
-    String refreshToken = this.jwtUtil.generateTokenRF(accountEntity.getUserName(), AuthTypeEnum.ACCOUNT.name());
+    String accessToken = this.jwtUtil.generateTokenAC(accountEntity.getUserName(), AuthTypeEnum.ACCOUNT.name(),
+        accountEntity.getTokenVersion());
+    String refreshToken = this.jwtUtil.generateTokenRF(accountEntity.getUserName(), AuthTypeEnum.ACCOUNT.name(),
+        accountEntity.getTokenVersion());
 
     AuthLoginResponseDto authLoginResponseDto = AuthLoginResponseDto.builder()
         .accessToken(accessToken)
@@ -78,7 +85,8 @@ public class ClientAuthServiceImpl implements ClientAuthService {
 
   @Override
   public ResponseEntity<ResponseDto<AuthUserLoginResponseDto>> loginUser(AuthUserLoginDto authUserLoginDto) {
-    UserEntity userEntity = this.userRepository.findByEmail(authUserLoginDto.getEmail()).orElse(null);
+    UserEntity userEntity = this.userRepository
+        .findByEmailAndIsDeletedFalseAndIsActiveTrue(authUserLoginDto.getEmail()).orElse(null);
     if (userEntity == null) {
       return ResponseDto.badRequest(List.of("Email or password is incorrect"));
     }
@@ -88,8 +96,10 @@ public class ClientAuthServiceImpl implements ClientAuthService {
       return ResponseDto.badRequest(List.of("Email or password is incorrect"));
     }
 
-    String accessToken = this.jwtUtil.generateTokenAC(userEntity.getEmail(), AuthTypeEnum.USER.name());
-    String refreshToken = this.jwtUtil.generateTokenRF(userEntity.getEmail(), AuthTypeEnum.USER.name());
+    String accessToken = this.jwtUtil.generateTokenAC(userEntity.getEmail(), AuthTypeEnum.USER.name(),
+        userEntity.getTokenVersion());
+    String refreshToken = this.jwtUtil.generateTokenRF(userEntity.getEmail(), AuthTypeEnum.USER.name(),
+        userEntity.getTokenVersion());
 
     AuthUserLoginResponseDto authUserLoginResponseDto = AuthUserLoginResponseDto.builder()
         .accessToken(accessToken)
@@ -137,7 +147,8 @@ public class ClientAuthServiceImpl implements ClientAuthService {
     @SuppressWarnings("unchecked")
     Map<String, String> data = (Map<String, String>) validationStatusRF.get("data");
 
-    String newAccessToken = this.jwtUtil.generateTokenAC(data.get("email"), data.get("role"));
+    String newAccessToken = this.jwtUtil.generateTokenAC(data.get("email"), data.get("role"),
+        Integer.valueOf(data.get("ver")));
     return ResponseDto.success(AuthRefreshTokenResponseDto.builder()
         .accessToken(newAccessToken)
         .build());
@@ -207,6 +218,26 @@ public class ClientAuthServiceImpl implements ClientAuthService {
     }
 
     return ResponseDto.success(true);
+  }
+
+  @Override
+  public ResponseEntity<ResponseDto<Object>> logout() {
+    String authHeader = request.getHeader("Authorization");
+    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+      return ResponseDto.unauthorized();
+    }
+    String accessToken = authHeader.substring(7);
+
+    Map<String, Object> validationStatusAC = jwtUtil.validateAndExtractAC(accessToken);
+    if (!"success".equals(validationStatusAC.get("status"))) {
+      return ResponseDto.unauthorized();
+    }
+
+    @SuppressWarnings("unchecked")
+    Map<String, String> userData = (Map<String, String>) validationStatusAC.get("data");
+    this.tokenVersionUtil.revokeTokens(userData.get("email"), userData.get("role"));
+
+    return ResponseDto.success(null);
   }
 
   private String generateSlug(String fullName) {

@@ -28,4 +28,6 @@ public interface ClientAuthService {
   ResponseEntity<ResponseDto<UserResponseDto>> userMe();
 
   ResponseEntity<ResponseDto<Boolean>> verifyToken();
+
+  ResponseEntity<ResponseDto<Object>> logout();
 }

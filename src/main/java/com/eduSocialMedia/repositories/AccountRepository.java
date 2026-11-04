@@ -12,5 +12,7 @@ import com.eduSocialMedia.repositories.entities.AccountEntity;
 public interface AccountRepository extends JpaRepository<AccountEntity, Long>, JpaSpecificationExecutor<AccountEntity>, AccountRepositoryCustom {
   Optional<AccountEntity> findByUserName(String userName);
 
+  Optional<AccountEntity> findByUserNameAndIsDeletedFalseAndIsActiveTrue(String userName);
+
   Optional<AccountEntity> findByIdAndIsDeletedFalse(Long id);
 }

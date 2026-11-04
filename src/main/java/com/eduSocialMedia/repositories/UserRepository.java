@@ -11,6 +11,8 @@ import com.eduSocialMedia.repositories.entities.UserEntity;
 public interface UserRepository extends JpaRepository<UserEntity, Long>, JpaSpecificationExecutor<UserEntity>, UserRepositoryCustom {
   Optional<UserEntity> findByEmail(String email);
 
+  Optional<UserEntity> findByEmailAndIsDeletedFalseAndIsActiveTrue(String email);
+
   Optional<UserEntity> findBySlug(String slug);
 
   Optional<UserEntity> findByIdAndIsDeletedFalse(Long id);

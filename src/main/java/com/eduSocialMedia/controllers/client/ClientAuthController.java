@@ -67,4 +67,9 @@ public class ClientAuthController {
   public ResponseEntity<ResponseDto<Boolean>> verifyToken() {
     return this.authService.verifyToken();
   }
+
+  @PostMapping("/logout")
+  public ResponseEntity<ResponseDto<Object>> logout() {
+    return this.authService.logout();
+  }
 }

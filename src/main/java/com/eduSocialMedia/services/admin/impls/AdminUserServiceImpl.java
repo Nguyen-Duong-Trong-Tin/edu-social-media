@@ -22,6 +22,7 @@ import com.eduSocialMedia.repositories.entities.UserEntity;
 import com.eduSocialMedia.services.CloudinaryService;
 import com.eduSocialMedia.services.admin.AdminUserService;
 import com.eduSocialMedia.utils.SecurityUtil;
+import com.eduSocialMedia.utils.TokenVersionUtil;
 
 @Service("adminUserServiceImpl")
 public class AdminUserServiceImpl implements AdminUserService {
@@ -30,14 +31,16 @@ public class AdminUserServiceImpl implements AdminUserService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final SecurityUtil securityUtil;
+  private final TokenVersionUtil tokenVersionUtil;
 
   AdminUserServiceImpl(UserConverter userConverter, CloudinaryService cloudinaryService, UserRepository userRepository,
-      PasswordEncoder passwordEncoder, SecurityUtil securityUtil) {
+      PasswordEncoder passwordEncoder, SecurityUtil securityUtil, TokenVersionUtil tokenVersionUtil) {
     this.userConverter = userConverter;
     this.cloudinaryService = cloudinaryService;
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
     this.securityUtil = securityUtil;
+    this.tokenVersionUtil = tokenVersionUtil;
   }
 
   @Override
@@ -141,7 +144,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     userEntity.setIsDeleted(true);
-    this.userRepository.save(userEntity);
+    this.tokenVersionUtil.revokeTokens(userEntity);
 
     return ResponseDto.success(null);
   }

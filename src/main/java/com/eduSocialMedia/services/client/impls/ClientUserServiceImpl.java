@@ -22,6 +22,7 @@ import com.eduSocialMedia.repositories.entities.UserEntity;
 import com.eduSocialMedia.services.CloudinaryService;
 import com.eduSocialMedia.services.client.ClientUserService;
 import com.eduSocialMedia.utils.SecurityUtil;
+import com.eduSocialMedia.utils.TokenVersionUtil;
 
 @Service
 public class ClientUserServiceImpl implements ClientUserService {
@@ -30,14 +31,16 @@ public class ClientUserServiceImpl implements ClientUserService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final SecurityUtil securityUtil;
+  private final TokenVersionUtil tokenVersionUtil;
 
   ClientUserServiceImpl(UserConverter userConverter, CloudinaryService cloudinaryService, UserRepository userRepository,
-      PasswordEncoder passwordEncoder, SecurityUtil securityUtil) {
+      PasswordEncoder passwordEncoder, SecurityUtil securityUtil, TokenVersionUtil tokenVersionUtil) {
     this.userConverter = userConverter;
     this.cloudinaryService = cloudinaryService;
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
     this.securityUtil = securityUtil;
+    this.tokenVersionUtil = tokenVersionUtil;
   }
 
   @Override
@@ -147,7 +150,7 @@ public class ClientUserServiceImpl implements ClientUserService {
     }
 
     userEntity.setIsDeleted(true);
-    this.userRepository.save(userEntity);
+    this.tokenVersionUtil.revokeTokens(userEntity);
 
     return ResponseDto.success(null);
   }

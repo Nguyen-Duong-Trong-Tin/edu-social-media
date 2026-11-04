@@ -21,6 +21,7 @@ import com.eduSocialMedia.repositories.UserRepository;
 import com.eduSocialMedia.repositories.entities.AccountEntity;
 import com.eduSocialMedia.services.admin.AdminAuthService;
 import com.eduSocialMedia.utils.JwtUtil;
+import com.eduSocialMedia.utils.TokenVersionUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -31,20 +32,24 @@ public class AdminAuthServiceImpl implements AdminAuthService {
   private final PasswordEncoder passwordEncoder;
   private final JwtUtil jwtUtil;
   private final AccountRepository accountRepository;
+  private final TokenVersionUtil tokenVersionUtil;
 
   AdminAuthServiceImpl(HttpServletRequest request, AccountConverter accountConverter, UserConverter userConverter,
       PasswordEncoder passwordEncoder,
-      JwtUtil jwtUtil, AccountRepository accountRepository, UserRepository userRepository) {
+      JwtUtil jwtUtil, AccountRepository accountRepository, UserRepository userRepository,
+      TokenVersionUtil tokenVersionUtil) {
     this.request = request;
     this.accountConverter = accountConverter;
     this.passwordEncoder = passwordEncoder;
     this.jwtUtil = jwtUtil;
     this.accountRepository = accountRepository;
+    this.tokenVersionUtil = tokenVersionUtil;
   }
 
   @Override
   public ResponseEntity<ResponseDto<AuthLoginResponseDto>> login(AuthLoginDto authLoginDto) {
-    AccountEntity accountEntity = this.accountRepository.findByUserName(authLoginDto.getUserName()).orElse(null);
+    AccountEntity accountEntity = this.accountRepository
+        .findByUserNameAndIsDeletedFalseAndIsActiveTrue(authLoginDto.getUserName()).orElse(null);
     if (accountEntity == null) {
       return ResponseDto.badRequest(List.of("User name or password is incorrect"));
     }
@@ -54,8 +59,10 @@ public class AdminAuthServiceImpl implements AdminAuthService {
       return ResponseDto.badRequest(List.of("User name or password is incorrect"));
     }
 
-    String accessToken = this.jwtUtil.generateTokenAC(accountEntity.getUserName(), AuthTypeEnum.ACCOUNT.name());
-    String refreshToken = this.jwtUtil.generateTokenRF(accountEntity.getUserName(), AuthTypeEnum.ACCOUNT.name());
+    String accessToken = this.jwtUtil.generateTokenAC(accountEntity.getUserName(), AuthTypeEnum.ACCOUNT.name(),
+        accountEntity.getTokenVersion());
+    String refreshToken = this.jwtUtil.generateTokenRF(accountEntity.getUserName(), AuthTypeEnum.ACCOUNT.name(),
+        accountEntity.getTokenVersion());
 
     AuthLoginResponseDto authLoginResponseDto = AuthLoginResponseDto.builder()
         .accessToken(accessToken)
@@ -84,7 +91,8 @@ public class AdminAuthServiceImpl implements AdminAuthService {
     @SuppressWarnings("unchecked")
     Map<String, String> data = (Map<String, String>) validationStatusRF.get("data");
 
-    String newAccessToken = this.jwtUtil.generateTokenAC(data.get("email"), data.get("role"));
+    String newAccessToken = this.jwtUtil.generateTokenAC(data.get("email"), data.get("role"),
+        Integer.valueOf(data.get("ver")));
     return ResponseDto.success(AuthRefreshTokenResponseDto.builder()
         .accessToken(newAccessToken)
         .build());
@@ -129,5 +137,25 @@ public class AdminAuthServiceImpl implements AdminAuthService {
     }
 
     return ResponseDto.success(true);
+  }
+
+  @Override
+  public ResponseEntity<ResponseDto<Object>> logout() {
+    String authHeader = request.getHeader("Authorization");
+    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+      return ResponseDto.unauthorized();
+    }
+    String accessToken = authHeader.substring(7);
+
+    Map<String, Object> validationStatusAC = jwtUtil.validateAndExtractAC(accessToken);
+    if (!"success".equals(validationStatusAC.get("status"))) {
+      return ResponseDto.unauthorized();
+    }
+
+    @SuppressWarnings("unchecked")
+    Map<String, String> userData = (Map<String, String>) validationStatusAC.get("data");
+    this.tokenVersionUtil.revokeTokens(userData.get("email"), userData.get("role"));
+
+    return ResponseDto.success(null);
   }
 }

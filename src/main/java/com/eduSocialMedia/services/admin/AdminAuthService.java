@@ -17,4 +17,6 @@ public interface AdminAuthService {
   ResponseEntity<ResponseDto<AccountResponseDto>> me();
 
   ResponseEntity<ResponseDto<Boolean>> verifyToken();
+
+  ResponseEntity<ResponseDto<Object>> logout();
 }
