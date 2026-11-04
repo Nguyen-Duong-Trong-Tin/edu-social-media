@@ -125,19 +125,19 @@ public class ClientAuthServiceImpl implements ClientAuthService {
     String refreshToken = authRefreshTokenDto.getRefreshToken();
 
     Map<String, Object> validationStatusAC = jwtUtil.validateAndExtractAC(accessToken);
-    if (validationStatusAC.get("status") == "invalid") {
+    if ("invalid".equals(validationStatusAC.get("status"))) {
       return ResponseDto.unauthorized();
     }
 
     Map<String, Object> validationStatusRF = jwtUtil.validateAndExtractRF(refreshToken);
-    if (validationStatusRF.get("status") != "success") {
+    if (!"success".equals(validationStatusRF.get("status"))) {
       return ResponseDto.unauthorized();
     }
 
-    String email = (String) validationStatusRF.get("email");
-    String role = (String) validationStatusRF.get("role");
+    @SuppressWarnings("unchecked")
+    Map<String, String> data = (Map<String, String>) validationStatusRF.get("data");
 
-    String newAccessToken = this.jwtUtil.generateTokenAC(email, role);
+    String newAccessToken = this.jwtUtil.generateTokenAC(data.get("email"), data.get("role"));
     return ResponseDto.success(AuthRefreshTokenResponseDto.builder()
         .accessToken(newAccessToken)
         .build());
