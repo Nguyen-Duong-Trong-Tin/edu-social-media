@@ -54,14 +54,14 @@ public class ClientGroupTaskController {
   }
 
   @GetMapping
-  @Auth({ AuthTypeEnum.ACCOUNT })
+  @Auth({ AuthTypeEnum.ACCOUNT, AuthTypeEnum.USER })
   public ResponseEntity<ResponseDto<ResponseSpecification<GroupTaskResponseDto>>> find(GroupTaskFindDto query,
       @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable) {
     return this.groupTaskService.find(query, pageable);
   }
 
   @GetMapping("/{id}")
-  @Auth({ AuthTypeEnum.ACCOUNT })
+  @Auth({ AuthTypeEnum.ACCOUNT, AuthTypeEnum.USER })
   public ResponseEntity<ResponseDto<GroupTaskResponseDto>> findById(@PathVariable Long id) {
     return this.groupTaskService.findById(id);
   }

@@ -14,13 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eduSocialMedia.annotations.Auth;
+import com.eduSocialMedia.annotations.CurrentUser;
 import com.eduSocialMedia.dtos.ResponseDto;
 import com.eduSocialMedia.dtos.ResponseSpecification;
-import com.eduSocialMedia.dtos.groupTaskSubmissions.GroupTaskSubmissionCreateDto;
+import com.eduSocialMedia.dtos.groupTaskSubmissions.ClientGroupTaskSubmissionCreateDto;
+import com.eduSocialMedia.dtos.groupTaskSubmissions.ClientGroupTaskSubmissionUpdateDto;
 import com.eduSocialMedia.dtos.groupTaskSubmissions.GroupTaskSubmissionFindDto;
 import com.eduSocialMedia.dtos.groupTaskSubmissions.GroupTaskSubmissionResponseDto;
-import com.eduSocialMedia.dtos.groupTaskSubmissions.GroupTaskSubmissionUpdateDto;
 import com.eduSocialMedia.enums.AuthTypeEnum;
+import com.eduSocialMedia.repositories.entities.UserEntity;
 import com.eduSocialMedia.services.client.ClientGroupTaskSubmissionService;
 
 import jakarta.validation.Valid;
@@ -35,34 +37,37 @@ public class ClientGroupTaskSubmissionController {
   }
 
   @PostMapping
-  @Auth({ AuthTypeEnum.ACCOUNT })
-  public ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> create(@Valid @RequestBody GroupTaskSubmissionCreateDto createDto) {
-    return this.groupTaskSubmissionService.create(createDto);
+  @Auth({ AuthTypeEnum.USER })
+  public ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> create(
+      @Valid @RequestBody ClientGroupTaskSubmissionCreateDto createDto, @CurrentUser UserEntity me) {
+    return this.groupTaskSubmissionService.create(createDto, me);
   }
 
   @PatchMapping("/{id}")
-  @Auth({ AuthTypeEnum.ACCOUNT })
+  @Auth({ AuthTypeEnum.USER })
   public ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> update(@PathVariable Long id,
-      @Valid @RequestBody GroupTaskSubmissionUpdateDto updateDto) {
-    return this.groupTaskSubmissionService.update(id, updateDto);
+      @Valid @RequestBody ClientGroupTaskSubmissionUpdateDto updateDto, @CurrentUser UserEntity me) {
+    return this.groupTaskSubmissionService.update(id, updateDto, me);
   }
 
   @DeleteMapping("/{id}")
-  @Auth({ AuthTypeEnum.ACCOUNT })
-  public ResponseEntity<ResponseDto<Object>> delete(@PathVariable Long id) {
-    return this.groupTaskSubmissionService.delete(id);
+  @Auth({ AuthTypeEnum.USER })
+  public ResponseEntity<ResponseDto<Object>> delete(@PathVariable Long id, @CurrentUser UserEntity me) {
+    return this.groupTaskSubmissionService.delete(id, me);
   }
 
   @GetMapping
-  @Auth({ AuthTypeEnum.ACCOUNT })
-  public ResponseEntity<ResponseDto<ResponseSpecification<GroupTaskSubmissionResponseDto>>> find(GroupTaskSubmissionFindDto query,
-      @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable) {
-    return this.groupTaskSubmissionService.find(query, pageable);
+  @Auth({ AuthTypeEnum.USER })
+  public ResponseEntity<ResponseDto<ResponseSpecification<GroupTaskSubmissionResponseDto>>> find(
+      GroupTaskSubmissionFindDto query,
+      @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable, @CurrentUser UserEntity me) {
+    return this.groupTaskSubmissionService.find(query, pageable, me);
   }
 
   @GetMapping("/{id}")
-  @Auth({ AuthTypeEnum.ACCOUNT })
-  public ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> findById(@PathVariable Long id) {
-    return this.groupTaskSubmissionService.findById(id);
+  @Auth({ AuthTypeEnum.USER })
+  public ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> findById(@PathVariable Long id,
+      @CurrentUser UserEntity me) {
+    return this.groupTaskSubmissionService.findById(id, me);
   }
 }

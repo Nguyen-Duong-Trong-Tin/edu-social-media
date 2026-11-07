@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import com.eduSocialMedia.dtos.userArticles.UserArticleFindDto;
+import com.eduSocialMedia.enums.UserArticleStatusEnum;
 import com.eduSocialMedia.repositories.customs.UserArticleRepositoryCustom;
 import com.eduSocialMedia.repositories.entities.UserArticleEntity;
 import com.eduSocialMedia.utils.QueryUtil;
@@ -38,5 +39,12 @@ public class UserArticleRepositoryCustomImpl implements UserArticleRepositoryCus
 
       return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     };
+  }
+
+  @Override
+  public Specification<UserArticleEntity> isVisibleTo(Long userId) {
+    return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.or(
+        criteriaBuilder.equal(root.get("status"), UserArticleStatusEnum.PUBLIC),
+        criteriaBuilder.equal(root.get("user").get("id"), userId));
   }
 }

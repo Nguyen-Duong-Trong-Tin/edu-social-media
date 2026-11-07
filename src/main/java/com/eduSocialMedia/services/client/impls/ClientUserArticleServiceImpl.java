@@ -12,12 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.eduSocialMedia.converters.UserArticleConverter;
 import com.eduSocialMedia.dtos.ResponseDto;
 import com.eduSocialMedia.dtos.ResponseSpecification;
-import com.eduSocialMedia.dtos.userArticles.UserArticleCreateDto;
+import com.eduSocialMedia.dtos.userArticles.ClientUserArticleCreateDto;
+import com.eduSocialMedia.dtos.userArticles.ClientUserArticleUpdateDto;
 import com.eduSocialMedia.dtos.userArticles.UserArticleFindDto;
 import com.eduSocialMedia.dtos.userArticles.UserArticleResponseDto;
-import com.eduSocialMedia.dtos.userArticles.UserArticleUpdateDto;
+import com.eduSocialMedia.enums.UserArticleStatusEnum;
 import com.eduSocialMedia.repositories.UserArticleRepository;
-import com.eduSocialMedia.repositories.UserRepository;
 import com.eduSocialMedia.repositories.entities.UserArticleEntity;
 import com.eduSocialMedia.repositories.entities.UserEntity;
 import com.eduSocialMedia.services.client.ClientUserArticleService;
@@ -26,25 +26,18 @@ import com.eduSocialMedia.services.client.ClientUserArticleService;
 public class ClientUserArticleServiceImpl implements ClientUserArticleService {
   private final UserArticleConverter userArticleConverter;
   private final UserArticleRepository userArticleRepository;
-  private final UserRepository userRepository;
 
-  ClientUserArticleServiceImpl(UserArticleConverter userArticleConverter, UserArticleRepository userArticleRepository,
-      UserRepository userRepository) {
+  ClientUserArticleServiceImpl(UserArticleConverter userArticleConverter, UserArticleRepository userArticleRepository) {
     this.userArticleConverter = userArticleConverter;
     this.userArticleRepository = userArticleRepository;
-    this.userRepository = userRepository;
   }
 
   @Override
   @Transactional
-  public ResponseEntity<ResponseDto<UserArticleResponseDto>> create(UserArticleCreateDto createDto) {
-    UserEntity user = this.userRepository.findByIdAndIsDeletedFalse(createDto.getUserId()).orElse(null);
-    if (user == null) {
-      return ResponseDto.notFound("User not found");
-    }
-
+  public ResponseEntity<ResponseDto<UserArticleResponseDto>> create(ClientUserArticleCreateDto createDto,
+      UserEntity me) {
     UserArticleEntity entity = this.userArticleConverter.toUserArticleEntity(createDto);
-    entity.setUser(user);
+    entity.setUser(me);
 
     entity = this.userArticleRepository.save(entity);
 
@@ -54,20 +47,15 @@ public class ClientUserArticleServiceImpl implements ClientUserArticleService {
 
   @Override
   @Transactional
-  public ResponseEntity<ResponseDto<UserArticleResponseDto>> update(Long id, UserArticleUpdateDto updateDto) {
+  public ResponseEntity<ResponseDto<UserArticleResponseDto>> update(Long id, ClientUserArticleUpdateDto updateDto,
+      UserEntity me) {
     UserArticleEntity entity = this.userArticleRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (entity == null) {
       return ResponseDto.notFound("User article not found");
     }
 
-
-
-    if (updateDto.getUserId() != null) {
-      UserEntity user = this.userRepository.findByIdAndIsDeletedFalse(updateDto.getUserId()).orElse(null);
-      if (user == null) {
-        return ResponseDto.notFound("User not found");
-      }
-      entity.setUser(user);
+    if (!entity.getUser().getId().equals(me.getId())) {
+      return ResponseDto.forbidden();
     }
 
     this.userArticleConverter.copyToUserArticleEntity(updateDto, entity);
@@ -80,10 +68,14 @@ public class ClientUserArticleServiceImpl implements ClientUserArticleService {
 
   @Override
   @Transactional
-  public ResponseEntity<ResponseDto<Object>> delete(Long id) {
+  public ResponseEntity<ResponseDto<Object>> delete(Long id, UserEntity me) {
     UserArticleEntity entity = this.userArticleRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (entity == null) {
       return ResponseDto.notFound("User article not found");
+    }
+
+    if (!entity.getUser().getId().equals(me.getId())) {
+      return ResponseDto.forbidden();
     }
 
     entity.setIsDeleted(true);
@@ -95,8 +87,9 @@ public class ClientUserArticleServiceImpl implements ClientUserArticleService {
   @Override
   @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<ResponseSpecification<UserArticleResponseDto>>> find(UserArticleFindDto query,
-      Pageable pageable) {
-    Specification<UserArticleEntity> spec = this.userArticleRepository.hasCriteria(query);
+      Pageable pageable, UserEntity me) {
+    Specification<UserArticleEntity> spec = this.userArticleRepository.hasCriteria(query)
+        .and(this.userArticleRepository.isVisibleTo(me.getId()));
     Page<UserArticleEntity> pageResult = this.userArticleRepository.findAll(spec, pageable);
 
     int page = pageResult.getNumber();
@@ -120,9 +113,10 @@ public class ClientUserArticleServiceImpl implements ClientUserArticleService {
 
   @Override
   @Transactional(readOnly = true)
-  public ResponseEntity<ResponseDto<UserArticleResponseDto>> findById(Long id) {
+  public ResponseEntity<ResponseDto<UserArticleResponseDto>> findById(Long id, UserEntity me) {
     UserArticleEntity entity = this.userArticleRepository.findByIdAndIsDeletedFalse(id).orElse(null);
-    if (entity == null) {
+    // Someone else's non-public article is reported as missing, same as in find
+    if (entity == null || !isVisibleTo(entity, me)) {
       return ResponseDto.notFound("User article not found");
     }
 
@@ -130,5 +124,7 @@ public class ClientUserArticleServiceImpl implements ClientUserArticleService {
     return ResponseDto.success(responseDto);
   }
 
-
+  private boolean isVisibleTo(UserArticleEntity entity, UserEntity me) {
+    return entity.getStatus() == UserArticleStatusEnum.PUBLIC || entity.getUser().getId().equals(me.getId());
+  }
 }

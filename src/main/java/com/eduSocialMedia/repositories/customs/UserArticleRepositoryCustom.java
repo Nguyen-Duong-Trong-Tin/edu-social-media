@@ -6,4 +6,9 @@ import com.eduSocialMedia.repositories.entities.UserArticleEntity;
 
 public interface UserArticleRepositoryCustom {
   Specification<UserArticleEntity> hasCriteria(UserArticleFindDto query);
+
+  /**
+   * PUBLIC articles, plus every article owned by userId.
+   */
+  Specification<UserArticleEntity> isVisibleTo(Long userId);
 }

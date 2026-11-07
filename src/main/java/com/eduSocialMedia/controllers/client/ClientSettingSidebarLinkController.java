@@ -53,7 +53,7 @@ public class ClientSettingSidebarLinkController {
   }
 
   @GetMapping
-  @Auth({ AuthTypeEnum.ACCOUNT })
+  @Auth({ AuthTypeEnum.ACCOUNT, AuthTypeEnum.USER })
   public ResponseEntity<ResponseDto<ResponseSpecification<SettingSidebarLinkResponseDto>>> find(
       SettingSidebarLinkFindDto query,
       @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable) {
@@ -61,7 +61,7 @@ public class ClientSettingSidebarLinkController {
   }
 
   @GetMapping("/{id}")
-  @Auth({ AuthTypeEnum.ACCOUNT })
+  @Auth({ AuthTypeEnum.ACCOUNT, AuthTypeEnum.USER })
   public ResponseEntity<ResponseDto<SettingSidebarLinkResponseDto>> findById(@PathVariable Long id) {
     return this.settingSidebarLinkService.findById(id);
   }

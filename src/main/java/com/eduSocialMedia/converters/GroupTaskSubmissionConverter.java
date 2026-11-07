@@ -3,6 +3,8 @@ package com.eduSocialMedia.converters;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import com.eduSocialMedia.dtos.groupTaskSubmissions.ClientGroupTaskSubmissionCreateDto;
+import com.eduSocialMedia.dtos.groupTaskSubmissions.ClientGroupTaskSubmissionUpdateDto;
 import com.eduSocialMedia.dtos.groupTaskSubmissions.GroupTaskSubmissionCreateDto;
 import com.eduSocialMedia.dtos.groupTaskSubmissions.GroupTaskSubmissionResponseDto;
 import com.eduSocialMedia.dtos.groupTaskSubmissions.GroupTaskSubmissionUpdateDto;
@@ -20,6 +22,10 @@ public class GroupTaskSubmissionConverter {
     return this.modelMapper.map(createDto, GroupTaskSubmissionEntity.class);
   }
 
+  public GroupTaskSubmissionEntity toGroupTaskSubmissionEntity(ClientGroupTaskSubmissionCreateDto createDto) {
+    return this.modelMapper.map(createDto, GroupTaskSubmissionEntity.class);
+  }
+
   public GroupTaskSubmissionResponseDto toGroupTaskSubmissionResponseDto(GroupTaskSubmissionEntity entity) {
     GroupTaskSubmissionResponseDto responseDto = this.modelMapper.map(entity, GroupTaskSubmissionResponseDto.class);
     if (entity.getGroupTask() != null) {
@@ -32,6 +38,11 @@ public class GroupTaskSubmissionConverter {
   }
 
   public GroupTaskSubmissionEntity copyToGroupTaskSubmissionEntity(GroupTaskSubmissionUpdateDto updateDto, GroupTaskSubmissionEntity entity) {
+    this.modelMapper.map(updateDto, entity);
+    return entity;
+  }
+
+  public GroupTaskSubmissionEntity copyToGroupTaskSubmissionEntity(ClientGroupTaskSubmissionUpdateDto updateDto, GroupTaskSubmissionEntity entity) {
     this.modelMapper.map(updateDto, entity);
     return entity;
   }

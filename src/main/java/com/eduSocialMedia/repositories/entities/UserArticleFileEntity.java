@@ -17,7 +17,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "user_articles")
+@Table(name = "user_article_files")
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

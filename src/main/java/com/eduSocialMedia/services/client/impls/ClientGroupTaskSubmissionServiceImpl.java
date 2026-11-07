@@ -12,13 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.eduSocialMedia.converters.GroupTaskSubmissionConverter;
 import com.eduSocialMedia.dtos.ResponseDto;
 import com.eduSocialMedia.dtos.ResponseSpecification;
-import com.eduSocialMedia.dtos.groupTaskSubmissions.GroupTaskSubmissionCreateDto;
+import com.eduSocialMedia.dtos.groupTaskSubmissions.ClientGroupTaskSubmissionCreateDto;
+import com.eduSocialMedia.dtos.groupTaskSubmissions.ClientGroupTaskSubmissionUpdateDto;
 import com.eduSocialMedia.dtos.groupTaskSubmissions.GroupTaskSubmissionFindDto;
 import com.eduSocialMedia.dtos.groupTaskSubmissions.GroupTaskSubmissionResponseDto;
-import com.eduSocialMedia.dtos.groupTaskSubmissions.GroupTaskSubmissionUpdateDto;
 import com.eduSocialMedia.repositories.GroupTaskRepository;
 import com.eduSocialMedia.repositories.GroupTaskSubmissionRepository;
-import com.eduSocialMedia.repositories.UserRepository;
 import com.eduSocialMedia.repositories.entities.GroupTaskEntity;
 import com.eduSocialMedia.repositories.entities.GroupTaskSubmissionEntity;
 import com.eduSocialMedia.repositories.entities.UserEntity;
@@ -29,34 +28,27 @@ public class ClientGroupTaskSubmissionServiceImpl implements ClientGroupTaskSubm
   private final GroupTaskSubmissionConverter groupTaskSubmissionConverter;
   private final GroupTaskSubmissionRepository groupTaskSubmissionRepository;
   private final GroupTaskRepository groupTaskRepository;
-  private final UserRepository userRepository;
 
   ClientGroupTaskSubmissionServiceImpl(GroupTaskSubmissionConverter groupTaskSubmissionConverter,
-      GroupTaskSubmissionRepository groupTaskSubmissionRepository, GroupTaskRepository groupTaskRepository,
-      UserRepository userRepository) {
+      GroupTaskSubmissionRepository groupTaskSubmissionRepository, GroupTaskRepository groupTaskRepository) {
     this.groupTaskSubmissionConverter = groupTaskSubmissionConverter;
     this.groupTaskSubmissionRepository = groupTaskSubmissionRepository;
     this.groupTaskRepository = groupTaskRepository;
-    this.userRepository = userRepository;
   }
 
   @Override
   @Transactional
-  public ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> create(GroupTaskSubmissionCreateDto createDto) {
+  public ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> create(
+      ClientGroupTaskSubmissionCreateDto createDto, UserEntity me) {
     GroupTaskEntity groupTask = this.groupTaskRepository.findByIdAndIsDeletedFalse(createDto.getGroupTaskId())
         .orElse(null);
     if (groupTask == null) {
       return ResponseDto.notFound("Group task not found");
     }
 
-    UserEntity user = this.userRepository.findByIdAndIsDeletedFalse(createDto.getUserId()).orElse(null);
-    if (user == null) {
-      return ResponseDto.notFound("User not found");
-    }
-
     GroupTaskSubmissionEntity entity = this.groupTaskSubmissionConverter.toGroupTaskSubmissionEntity(createDto);
     entity.setGroupTask(groupTask);
-    entity.setUser(user);
+    entity.setUser(me);
     entity.setSlug(generateUniqueSlug(createDto.getName()));
 
     entity = this.groupTaskSubmissionRepository.save(entity);
@@ -69,10 +61,14 @@ public class ClientGroupTaskSubmissionServiceImpl implements ClientGroupTaskSubm
   @Override
   @Transactional
   public ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> update(Long id,
-      GroupTaskSubmissionUpdateDto updateDto) {
+      ClientGroupTaskSubmissionUpdateDto updateDto, UserEntity me) {
     GroupTaskSubmissionEntity entity = this.groupTaskSubmissionRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (entity == null) {
       return ResponseDto.notFound("Group task submission not found");
+    }
+
+    if (!entity.getUser().getId().equals(me.getId())) {
+      return ResponseDto.forbidden();
     }
 
     if (updateDto.getName() != null && !updateDto.getName().trim().isEmpty()
@@ -89,14 +85,6 @@ public class ClientGroupTaskSubmissionServiceImpl implements ClientGroupTaskSubm
       entity.setGroupTask(groupTask);
     }
 
-    if (updateDto.getUserId() != null) {
-      UserEntity user = this.userRepository.findByIdAndIsDeletedFalse(updateDto.getUserId()).orElse(null);
-      if (user == null) {
-        return ResponseDto.notFound("User not found");
-      }
-      entity.setUser(user);
-    }
-
     this.groupTaskSubmissionConverter.copyToGroupTaskSubmissionEntity(updateDto, entity);
 
     entity = this.groupTaskSubmissionRepository.save(entity);
@@ -108,10 +96,14 @@ public class ClientGroupTaskSubmissionServiceImpl implements ClientGroupTaskSubm
 
   @Override
   @Transactional
-  public ResponseEntity<ResponseDto<Object>> delete(Long id) {
+  public ResponseEntity<ResponseDto<Object>> delete(Long id, UserEntity me) {
     GroupTaskSubmissionEntity entity = this.groupTaskSubmissionRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (entity == null) {
       return ResponseDto.notFound("Group task submission not found");
+    }
+
+    if (!entity.getUser().getId().equals(me.getId())) {
+      return ResponseDto.forbidden();
     }
 
     entity.setIsDeleted(true);
@@ -123,7 +115,9 @@ public class ClientGroupTaskSubmissionServiceImpl implements ClientGroupTaskSubm
   @Override
   @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<ResponseSpecification<GroupTaskSubmissionResponseDto>>> find(
-      GroupTaskSubmissionFindDto query, Pageable pageable) {
+      GroupTaskSubmissionFindDto query, Pageable pageable, UserEntity me) {
+    // Users only see their own submissions, whatever userId the query asks for
+    query.setUserId(me.getId());
     Specification<GroupTaskSubmissionEntity> spec = this.groupTaskSubmissionRepository.hasCriteria(query);
     Page<GroupTaskSubmissionEntity> pageResult = this.groupTaskSubmissionRepository.findAll(spec, pageable);
 
@@ -148,9 +142,10 @@ public class ClientGroupTaskSubmissionServiceImpl implements ClientGroupTaskSubm
 
   @Override
   @Transactional(readOnly = true)
-  public ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> findById(Long id) {
+  public ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> findById(Long id, UserEntity me) {
     GroupTaskSubmissionEntity entity = this.groupTaskSubmissionRepository.findByIdAndIsDeletedFalse(id).orElse(null);
-    if (entity == null) {
+    // Someone else's submission is reported as missing, same as in find
+    if (entity == null || !entity.getUser().getId().equals(me.getId())) {
       return ResponseDto.notFound("Group task submission not found");
     }
 

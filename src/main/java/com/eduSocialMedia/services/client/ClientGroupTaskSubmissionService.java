@@ -5,19 +5,23 @@ import org.springframework.http.ResponseEntity;
 
 import com.eduSocialMedia.dtos.ResponseDto;
 import com.eduSocialMedia.dtos.ResponseSpecification;
-import com.eduSocialMedia.dtos.groupTaskSubmissions.GroupTaskSubmissionCreateDto;
+import com.eduSocialMedia.dtos.groupTaskSubmissions.ClientGroupTaskSubmissionCreateDto;
+import com.eduSocialMedia.dtos.groupTaskSubmissions.ClientGroupTaskSubmissionUpdateDto;
 import com.eduSocialMedia.dtos.groupTaskSubmissions.GroupTaskSubmissionFindDto;
 import com.eduSocialMedia.dtos.groupTaskSubmissions.GroupTaskSubmissionResponseDto;
-import com.eduSocialMedia.dtos.groupTaskSubmissions.GroupTaskSubmissionUpdateDto;
+import com.eduSocialMedia.repositories.entities.UserEntity;
 
 public interface ClientGroupTaskSubmissionService {
-  ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> create(GroupTaskSubmissionCreateDto createDto);
+  ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> create(ClientGroupTaskSubmissionCreateDto createDto,
+      UserEntity me);
 
-  ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> update(Long id, GroupTaskSubmissionUpdateDto updateDto);
+  ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> update(Long id,
+      ClientGroupTaskSubmissionUpdateDto updateDto, UserEntity me);
 
-  ResponseEntity<ResponseDto<Object>> delete(Long id);
+  ResponseEntity<ResponseDto<Object>> delete(Long id, UserEntity me);
 
-  ResponseEntity<ResponseDto<ResponseSpecification<GroupTaskSubmissionResponseDto>>> find(GroupTaskSubmissionFindDto query, Pageable pageable);
+  ResponseEntity<ResponseDto<ResponseSpecification<GroupTaskSubmissionResponseDto>>> find(
+      GroupTaskSubmissionFindDto query, Pageable pageable, UserEntity me);
 
-  ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> findById(Long id);
+  ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> findById(Long id, UserEntity me);
 }

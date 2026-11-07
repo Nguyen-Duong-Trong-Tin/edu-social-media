@@ -3,6 +3,8 @@ package com.eduSocialMedia.converters;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import com.eduSocialMedia.dtos.userArticles.ClientUserArticleCreateDto;
+import com.eduSocialMedia.dtos.userArticles.ClientUserArticleUpdateDto;
 import com.eduSocialMedia.dtos.userArticles.UserArticleCreateDto;
 import com.eduSocialMedia.dtos.userArticles.UserArticleResponseDto;
 import com.eduSocialMedia.dtos.userArticles.UserArticleUpdateDto;
@@ -20,6 +22,10 @@ public class UserArticleConverter {
     return this.modelMapper.map(createDto, UserArticleEntity.class);
   }
 
+  public UserArticleEntity toUserArticleEntity(ClientUserArticleCreateDto createDto) {
+    return this.modelMapper.map(createDto, UserArticleEntity.class);
+  }
+
   public UserArticleResponseDto toUserArticleResponseDto(UserArticleEntity entity) {
     UserArticleResponseDto responseDto = this.modelMapper.map(entity, UserArticleResponseDto.class);
     if (entity.getUser() != null) {
@@ -29,6 +35,11 @@ public class UserArticleConverter {
   }
 
   public UserArticleEntity copyToUserArticleEntity(UserArticleUpdateDto updateDto, UserArticleEntity entity) {
+    this.modelMapper.map(updateDto, entity);
+    return entity;
+  }
+
+  public UserArticleEntity copyToUserArticleEntity(ClientUserArticleUpdateDto updateDto, UserArticleEntity entity) {
     this.modelMapper.map(updateDto, entity);
     return entity;
   }
