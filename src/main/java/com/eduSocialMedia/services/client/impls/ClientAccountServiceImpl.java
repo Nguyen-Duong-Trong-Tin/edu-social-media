@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.eduSocialMedia.converters.AccountConverter;
@@ -41,6 +42,7 @@ public class ClientAccountServiceImpl implements ClientAccountService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<AccountResponseDto>> create(AccountCreateDto accountCreateDto) {
     AccountEntity accountEntity = this.accountConverter.toAccountEntity(accountCreateDto);
     accountEntity.setPassword(this.passwordEncoder.encode(accountCreateDto.getPassword()));
@@ -64,6 +66,7 @@ public class ClientAccountServiceImpl implements ClientAccountService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<AccountResponseDto>> update(Long id, AccountUpdateDto accountUpdateDto) {
     AccountEntity accountEntity = this.accountRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (accountEntity == null) {
@@ -87,6 +90,7 @@ public class ClientAccountServiceImpl implements ClientAccountService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<Object>> delete(Long id) {
     AccountEntity accountEntity = this.accountRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (accountEntity == null) {
@@ -100,6 +104,7 @@ public class ClientAccountServiceImpl implements ClientAccountService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<ResponseSpecification<AccountResponseDto>>> find(AccountFindDto query,
       Pageable pageable) {
     Specification<AccountEntity> accountSpec = this.accountRepository.hasCriteria(query);
@@ -124,6 +129,7 @@ public class ClientAccountServiceImpl implements ClientAccountService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<AccountResponseDto>> findById(Long id) {
     AccountEntity accountEntity = this.accountRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (accountEntity == null) {

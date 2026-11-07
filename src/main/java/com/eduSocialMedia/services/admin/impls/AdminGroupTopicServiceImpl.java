@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.eduSocialMedia.converters.GroupTopicConverter;
 import com.eduSocialMedia.dtos.ResponseDto;
@@ -57,6 +58,7 @@ public class AdminGroupTopicServiceImpl implements AdminGroupTopicService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<GroupTopicResponseDto>> create(GroupTopicCreateDto groupTopicCreateDto) {
     GroupTopicEntity topicExists = this.groupTopicRepository.findByName(groupTopicCreateDto.getName()).orElse(null);
     if (topicExists != null) {
@@ -73,6 +75,7 @@ public class AdminGroupTopicServiceImpl implements AdminGroupTopicService {
   }
 
    @Override
+  @Transactional
   public ResponseEntity<ResponseDto<GroupTopicResponseDto>> update(Long id, GroupTopicUpdateDto groupTopicUpdateDto) {
     GroupTopicEntity groupTopicEntity = this.groupTopicRepository.findById(id).orElse(null);
     if (groupTopicEntity == null) {
@@ -97,6 +100,7 @@ public class AdminGroupTopicServiceImpl implements AdminGroupTopicService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<Object>> delete(Long id) {
     GroupTopicEntity groupTopicEntity = this.groupTopicRepository.findById(id).orElse(null);
     if (groupTopicEntity == null) {
@@ -109,6 +113,7 @@ public class AdminGroupTopicServiceImpl implements AdminGroupTopicService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<ResponseSpecification<GroupTopicResponseDto>>> find(GroupTopicFindDto query,
       Pageable pageable) {
     Specification<GroupTopicEntity> spec = this.groupTopicRepository.hasCriteria(query);
@@ -134,6 +139,7 @@ public class AdminGroupTopicServiceImpl implements AdminGroupTopicService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<GroupTopicResponseDto>> findById(Long id) {
     GroupTopicEntity groupTopicEntity = this.groupTopicRepository.findById(id).orElse(null);
     if (groupTopicEntity == null) {

@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.eduSocialMedia.enums.AuthTypeEnum;
 import com.eduSocialMedia.repositories.AccountRepository;
@@ -46,7 +48,7 @@ public class TokenVersionUtil {
   public void revokeTokens(UserEntity userEntity) {
     userEntity.setTokenVersion(userEntity.getTokenVersion() + 1);
     this.userRepository.save(userEntity);
-    this.cache.remove(cacheKey(userEntity.getEmail(), AuthTypeEnum.USER.name()));
+    evictAfterCommit(cacheKey(userEntity.getEmail(), AuthTypeEnum.USER.name()));
   }
 
   /**
@@ -55,7 +57,7 @@ public class TokenVersionUtil {
   public void revokeTokens(AccountEntity accountEntity) {
     accountEntity.setTokenVersion(accountEntity.getTokenVersion() + 1);
     this.accountRepository.save(accountEntity);
-    this.cache.remove(cacheKey(accountEntity.getUserName(), AuthTypeEnum.ACCOUNT.name()));
+    evictAfterCommit(cacheKey(accountEntity.getUserName(), AuthTypeEnum.ACCOUNT.name()));
   }
 
   public void revokeTokens(String subject, String role) {
@@ -89,6 +91,20 @@ public class TokenVersionUtil {
           .map(AccountEntity::getTokenVersion).orElse(null);
     }
     return null;
+  }
+
+  // Evicting before commit would let a concurrent request re-cache the old version for a minute
+  private void evictAfterCommit(String key) {
+    if (!TransactionSynchronizationManager.isSynchronizationActive()) {
+      this.cache.remove(key);
+      return;
+    }
+    TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+      @Override
+      public void afterCommit() {
+        cache.remove(key);
+      }
+    });
   }
 
   private String cacheKey(String subject, String role) {

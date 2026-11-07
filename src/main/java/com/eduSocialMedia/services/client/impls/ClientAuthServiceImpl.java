@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.eduSocialMedia.dtos.ResponseDto;
 import com.eduSocialMedia.dtos.accounts.AccountResponseDto;
@@ -58,6 +59,7 @@ public class ClientAuthServiceImpl implements ClientAuthService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<AuthLoginResponseDto>> login(AuthLoginDto authLoginDto) {
     AccountEntity accountEntity = this.accountRepository
         .findByUserNameAndIsDeletedFalseAndIsActiveTrue(authLoginDto.getUserName()).orElse(null);
@@ -84,6 +86,7 @@ public class ClientAuthServiceImpl implements ClientAuthService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<AuthUserLoginResponseDto>> loginUser(AuthUserLoginDto authUserLoginDto) {
     UserEntity userEntity = this.userRepository
         .findByEmailAndIsDeletedFalseAndIsActiveTrue(authUserLoginDto.getEmail()).orElse(null);
@@ -110,6 +113,7 @@ public class ClientAuthServiceImpl implements ClientAuthService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<AuthRegisterResponseDto>> register(AuthRegisterDto authRegisterDto) {
     UserEntity userExists = this.userRepository.findByEmail(authRegisterDto.getEmail()).orElse(null);
     if (userExists != null) {
@@ -129,6 +133,7 @@ public class ClientAuthServiceImpl implements ClientAuthService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<AuthRefreshTokenResponseDto>> refreshToken(
       AuthRefreshTokenDto authRefreshTokenDto) {
     String accessToken = authRefreshTokenDto.getAccessToken();
@@ -155,6 +160,7 @@ public class ClientAuthServiceImpl implements ClientAuthService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<AccountResponseDto>> me() {
     String authHeader = request.getHeader("Authorization");
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -180,6 +186,7 @@ public class ClientAuthServiceImpl implements ClientAuthService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<UserResponseDto>> userMe() {
     String authHeader = request.getHeader("Authorization");
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -205,6 +212,7 @@ public class ClientAuthServiceImpl implements ClientAuthService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<Boolean>> verifyToken() {
     String authHeader = request.getHeader("Authorization");
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -221,6 +229,7 @@ public class ClientAuthServiceImpl implements ClientAuthService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<Object>> logout() {
     String authHeader = request.getHeader("Authorization");
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {

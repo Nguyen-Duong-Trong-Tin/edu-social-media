@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.eduSocialMedia.converters.PermissionConverter;
 import com.eduSocialMedia.dtos.ResponseDto;
@@ -31,6 +32,7 @@ public class ClientPermissionServiceImpl implements ClientPermissionService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<PermissionResponseDto>> create(PermissionCreateDto permissionCreateDto) {
     PermissionEntity permissionEntity = this.permissionConverter.toPermissionEntity(permissionCreateDto);
     permissionEntity.setCode(this.buildCode(permissionEntity.getName()));
@@ -43,6 +45,7 @@ public class ClientPermissionServiceImpl implements ClientPermissionService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<PermissionResponseDto>> update(Long id, PermissionUpdateDto permissionUpdateDto) {
     PermissionEntity permissionEntity = this.permissionRepository.findById(id).orElse(null);
 
@@ -63,6 +66,7 @@ public class ClientPermissionServiceImpl implements ClientPermissionService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<Object>> delete(Long id) {
     PermissionEntity permissionEntity = this.permissionRepository.findById(id).orElse(null);
 
@@ -75,6 +79,7 @@ public class ClientPermissionServiceImpl implements ClientPermissionService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<ResponseSpecification<PermissionResponseDto>>> find(PermissionFindDto query,
       Pageable pageable) {
     Specification<PermissionEntity> permissionSpec = this.permissionRepository.hasCriteria(query);
@@ -99,6 +104,7 @@ public class ClientPermissionServiceImpl implements ClientPermissionService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<PermissionResponseDto>> findById(Long id) {
     PermissionEntity permissionEntity = this.permissionRepository.findById(id).orElse(null);
     if (permissionEntity == null) {

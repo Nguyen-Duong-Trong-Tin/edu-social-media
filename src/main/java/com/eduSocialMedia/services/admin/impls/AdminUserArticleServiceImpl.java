@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.eduSocialMedia.converters.UserArticleConverter;
 import com.eduSocialMedia.dtos.ResponseDto;
@@ -35,6 +36,7 @@ public class AdminUserArticleServiceImpl implements AdminUserArticleService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<UserArticleResponseDto>> create(UserArticleCreateDto createDto) {
     UserEntity user = this.userRepository.findByIdAndIsDeletedFalse(createDto.getUserId()).orElse(null);
     if (user == null) {
@@ -51,6 +53,7 @@ public class AdminUserArticleServiceImpl implements AdminUserArticleService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<UserArticleResponseDto>> update(Long id, UserArticleUpdateDto updateDto) {
     UserArticleEntity entity = this.userArticleRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (entity == null) {
@@ -76,6 +79,7 @@ public class AdminUserArticleServiceImpl implements AdminUserArticleService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<Object>> delete(Long id) {
     UserArticleEntity entity = this.userArticleRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (entity == null) {
@@ -89,6 +93,7 @@ public class AdminUserArticleServiceImpl implements AdminUserArticleService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<ResponseSpecification<UserArticleResponseDto>>> find(UserArticleFindDto query,
       Pageable pageable) {
     Specification<UserArticleEntity> spec = this.userArticleRepository.hasCriteria(query);
@@ -114,6 +119,7 @@ public class AdminUserArticleServiceImpl implements AdminUserArticleService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<UserArticleResponseDto>> findById(Long id) {
     UserArticleEntity entity = this.userArticleRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (entity == null) {

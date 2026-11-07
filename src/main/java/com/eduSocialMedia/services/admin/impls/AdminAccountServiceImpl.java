@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.eduSocialMedia.converters.AccountConverter;
 import com.eduSocialMedia.dtos.ResponseDto;
@@ -41,6 +42,7 @@ public class AdminAccountServiceImpl implements AdminAccountService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<AccountResponseDto>> create(AccountCreateDto accountCreateDto) {
     AccountEntity accountUsernameExists = this.accountRepository.findByUserName(accountCreateDto.getUserName())
         .orElse(null);
@@ -64,6 +66,7 @@ public class AdminAccountServiceImpl implements AdminAccountService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<AccountResponseDto>> update(Long id, AccountUpdateDto accountUpdateDto) {
     AccountEntity accountEntity = this.accountRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (accountEntity == null) {
@@ -87,6 +90,7 @@ public class AdminAccountServiceImpl implements AdminAccountService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<Object>> delete(Long id) {
     AccountEntity accountEntity = this.accountRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (accountEntity == null) {
@@ -100,6 +104,7 @@ public class AdminAccountServiceImpl implements AdminAccountService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<ResponseSpecification<AccountResponseDto>>> find(AccountFindDto query,
       Pageable pageable) {
     Specification<AccountEntity> accountSpec = this.accountRepository.hasCriteria(query);
@@ -124,6 +129,7 @@ public class AdminAccountServiceImpl implements AdminAccountService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<AccountResponseDto>> findById(Long id) {
     AccountEntity accountEntity = this.accountRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (accountEntity == null) {

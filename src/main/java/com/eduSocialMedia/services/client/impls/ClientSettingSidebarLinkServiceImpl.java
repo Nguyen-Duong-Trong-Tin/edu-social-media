@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.eduSocialMedia.converters.SettingSidebarLinkConverter;
 import com.eduSocialMedia.dtos.ResponseDto;
@@ -31,6 +32,7 @@ public class ClientSettingSidebarLinkServiceImpl implements ClientSettingSidebar
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<SettingSidebarLinkResponseDto>> create(SettingSidebarLinkCreateDto createDto) {
     if (this.settingSidebarLinkRepository.existsByPath(createDto.getPath())) {
       return ResponseDto.badRequest(List.of("Path already exists"));
@@ -45,6 +47,7 @@ public class ClientSettingSidebarLinkServiceImpl implements ClientSettingSidebar
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<SettingSidebarLinkResponseDto>> update(Long id,
       SettingSidebarLinkUpdateDto updateDto) {
     SettingSidebarLinkEntity entity = this.settingSidebarLinkRepository.findById(id).orElse(null);
@@ -69,6 +72,7 @@ public class ClientSettingSidebarLinkServiceImpl implements ClientSettingSidebar
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<Object>> delete(Long id) {
     SettingSidebarLinkEntity entity = this.settingSidebarLinkRepository.findById(id).orElse(null);
     if (entity == null) {
@@ -80,6 +84,7 @@ public class ClientSettingSidebarLinkServiceImpl implements ClientSettingSidebar
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<ResponseSpecification<SettingSidebarLinkResponseDto>>> find(
       SettingSidebarLinkFindDto query, Pageable pageable) {
     Specification<SettingSidebarLinkEntity> spec = this.settingSidebarLinkRepository.hasCriteria(query);
@@ -106,6 +111,7 @@ public class ClientSettingSidebarLinkServiceImpl implements ClientSettingSidebar
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<SettingSidebarLinkResponseDto>> findById(Long id) {
     SettingSidebarLinkEntity entity = this.settingSidebarLinkRepository.findById(id).orElse(null);
     if (entity == null) {

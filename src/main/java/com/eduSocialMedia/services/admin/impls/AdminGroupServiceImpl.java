@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.eduSocialMedia.converters.GroupConverter;
 import com.eduSocialMedia.dtos.ResponseDto;
@@ -62,6 +63,7 @@ public class AdminGroupServiceImpl implements AdminGroupService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<GroupResponseDto>> create(GroupCreateDto groupCreateDto) {
     GroupEntity groupEntityExistsName = this.groupRepository.findByNameAndIsDeletedFalse(groupCreateDto.getName())
         .orElse(null);
@@ -85,6 +87,7 @@ public class AdminGroupServiceImpl implements AdminGroupService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<GroupResponseDto>> update(Long id, GroupUpdateDto groupUpdateDto) {
     GroupEntity groupEntity = this.groupRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (groupEntity == null) {
@@ -118,6 +121,7 @@ public class AdminGroupServiceImpl implements AdminGroupService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<Object>> delete(Long id) {
     GroupEntity groupEntity = this.groupRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (groupEntity == null) {
@@ -131,6 +135,7 @@ public class AdminGroupServiceImpl implements AdminGroupService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<ResponseSpecification<GroupResponseDto>>> find(GroupFindDto query,
       Pageable pageable) {
     Specification<GroupEntity> spec = this.groupRepository.hasCriteria(query);
@@ -156,6 +161,7 @@ public class AdminGroupServiceImpl implements AdminGroupService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<GroupResponseDto>> findById(Long id) {
     GroupEntity groupEntity = this.groupRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (groupEntity == null) {

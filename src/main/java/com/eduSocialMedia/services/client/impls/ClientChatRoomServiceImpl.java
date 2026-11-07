@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.eduSocialMedia.converters.ChatRoomConverter;
 import com.eduSocialMedia.dtos.ResponseDto;
@@ -35,6 +36,7 @@ public class ClientChatRoomServiceImpl implements ClientChatRoomService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<ChatRoomResponseDto>> create(ChatRoomCreateDto createDto) {
     GroupEntity group = null;
     if (createDto.getGroupId() != null) {
@@ -55,6 +57,7 @@ public class ClientChatRoomServiceImpl implements ClientChatRoomService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<ChatRoomResponseDto>> update(Long id, ChatRoomUpdateDto updateDto) {
     ChatRoomEntity entity = this.chatRoomRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (entity == null) {
@@ -83,6 +86,7 @@ public class ClientChatRoomServiceImpl implements ClientChatRoomService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<Object>> delete(Long id) {
     ChatRoomEntity entity = this.chatRoomRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (entity == null) {
@@ -96,6 +100,7 @@ public class ClientChatRoomServiceImpl implements ClientChatRoomService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<ResponseSpecification<ChatRoomResponseDto>>> find(ChatRoomFindDto query,
       Pageable pageable) {
     Specification<ChatRoomEntity> spec = this.chatRoomRepository.hasCriteria(query);
@@ -121,6 +126,7 @@ public class ClientChatRoomServiceImpl implements ClientChatRoomService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<ChatRoomResponseDto>> findById(Long id) {
     ChatRoomEntity entity = this.chatRoomRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (entity == null) {

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.eduSocialMedia.converters.AccountConverter;
 import com.eduSocialMedia.converters.UserConverter;
@@ -47,6 +48,7 @@ public class AdminAuthServiceImpl implements AdminAuthService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<AuthLoginResponseDto>> login(AuthLoginDto authLoginDto) {
     AccountEntity accountEntity = this.accountRepository
         .findByUserNameAndIsDeletedFalseAndIsActiveTrue(authLoginDto.getUserName()).orElse(null);
@@ -73,6 +75,7 @@ public class AdminAuthServiceImpl implements AdminAuthService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<AuthRefreshTokenResponseDto>> refreshToken(
       AuthRefreshTokenDto authRefreshTokenDto) {
     String accessToken = authRefreshTokenDto.getAccessToken();
@@ -99,6 +102,7 @@ public class AdminAuthServiceImpl implements AdminAuthService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<AccountResponseDto>> me() {
     String authHeader = request.getHeader("Authorization");
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -124,6 +128,7 @@ public class AdminAuthServiceImpl implements AdminAuthService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<Boolean>> verifyToken() {
     String authHeader = request.getHeader("Authorization");
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -140,6 +145,7 @@ public class AdminAuthServiceImpl implements AdminAuthService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<Object>> logout() {
     String authHeader = request.getHeader("Authorization");
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {

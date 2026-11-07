@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.eduSocialMedia.converters.GroupArticleConverter;
 import com.eduSocialMedia.dtos.ResponseDto;
@@ -62,6 +63,7 @@ public class AdminGroupArticleServiceImpl implements AdminGroupArticleService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<GroupArticleResponseDto>> create(GroupArticleCreateDto createDto) {
     GroupEntity groupEntity = this.groupRepository.findByIdAndIsDeletedFalse(createDto.getGroupId()).orElse(null);
     if (groupEntity == null) {
@@ -79,6 +81,7 @@ public class AdminGroupArticleServiceImpl implements AdminGroupArticleService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<GroupArticleResponseDto>> update(Long id, GroupArticleUpdateDto updateDto) {
     GroupArticleEntity groupArticleEntity = this.groupArticleRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (groupArticleEntity == null) {
@@ -107,6 +110,7 @@ public class AdminGroupArticleServiceImpl implements AdminGroupArticleService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<Object>> delete(Long id) {
     GroupArticleEntity groupArticleEntity = this.groupArticleRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (groupArticleEntity == null) {
@@ -120,6 +124,7 @@ public class AdminGroupArticleServiceImpl implements AdminGroupArticleService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<ResponseSpecification<GroupArticleResponseDto>>> find(GroupArticleFindDto query,
       Pageable pageable) {
     Specification<GroupArticleEntity> spec = this.groupArticleRepository.hasCriteria(query);
@@ -145,6 +150,7 @@ public class AdminGroupArticleServiceImpl implements AdminGroupArticleService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<GroupArticleResponseDto>> findById(Long id) {
     GroupArticleEntity entity = this.groupArticleRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (entity == null) {

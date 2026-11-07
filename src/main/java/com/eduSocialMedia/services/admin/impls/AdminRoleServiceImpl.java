@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.eduSocialMedia.converters.RoleConverter;
 import com.eduSocialMedia.dtos.ResponseDto;
@@ -40,6 +41,7 @@ public class AdminRoleServiceImpl implements AdminRoleService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<RoleResponseDto>> create(RoleCreateDto roleCreateDto) {
     RoleEntity roleEntity = this.roleConverter.toRoleEntity(roleCreateDto);
 
@@ -51,6 +53,7 @@ public class AdminRoleServiceImpl implements AdminRoleService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<RoleResponseDto>> addPermissions(Long id,
       RoleAddPermissionsDto roleAddPermissionsDto) {
     RoleEntity roleEntity = this.roleRepository.findById(id).orElse(null);
@@ -74,6 +77,7 @@ public class AdminRoleServiceImpl implements AdminRoleService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<RoleResponseDto>> update(Long id, RoleUpdateDto roleUpdateDto) {
     RoleEntity roleEntity = this.roleRepository.findById(id).orElse(null);
 
@@ -89,6 +93,7 @@ public class AdminRoleServiceImpl implements AdminRoleService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<RoleResponseDto>> replacePermissions(Long id,
       RoleReplacePermissionsDto roleReplacePermissionsDto) {
     RoleEntity roleEntity = this.roleRepository.findById(id).orElse(null);
@@ -112,6 +117,7 @@ public class AdminRoleServiceImpl implements AdminRoleService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<Object>> delete(Long id) {
     RoleEntity roleEntity = this.roleRepository.findById(id).orElse(null);
 
@@ -124,6 +130,7 @@ public class AdminRoleServiceImpl implements AdminRoleService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<RoleResponseDto>> removePermissions(Long id,
       RoleRemovePermissionsDto roleRemovePermissionsDto) {
     RoleEntity roleEntity = this.roleRepository.findById(id).orElse(null);
@@ -147,6 +154,7 @@ public class AdminRoleServiceImpl implements AdminRoleService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<ResponseSpecification<RoleResponseDto>>> find(RoleFindDto query,
       Pageable pageable) {
     Specification<RoleEntity> roleSpec = this.roleRepository.hasCriteria(query);
@@ -171,6 +179,7 @@ public class AdminRoleServiceImpl implements AdminRoleService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<RoleResponseDto>> findById(Long id) {
     RoleEntity roleEntity = this.roleRepository.findById(id).orElse(null);
     if (roleEntity == null) {

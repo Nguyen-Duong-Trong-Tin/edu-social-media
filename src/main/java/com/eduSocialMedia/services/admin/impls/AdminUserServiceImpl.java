@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.eduSocialMedia.converters.UserConverter;
@@ -44,6 +45,7 @@ public class AdminUserServiceImpl implements AdminUserService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<UserResponseDto>> create(UserCreateDto userCreateDto) {
     UserEntity userExists = this.userRepository.findByEmail(userCreateDto.getEmail()).orElse(null);
     if (userExists != null) {
@@ -62,6 +64,8 @@ public class AdminUserServiceImpl implements AdminUserService {
     return ResponseDto.created(userResponseDto);
   }
 
+  // Not @Transactional: the new URL must be committed before the old image is deleted from Cloudinary,
+  // and a DB connection should not be held during the upload
   @Override
   public ResponseEntity<ResponseDto<UserResponseDto>> upload(UserUploadDto userUploadDto, MultipartFile file) {
     String contentType = file.getContentType();
@@ -112,6 +116,7 @@ public class AdminUserServiceImpl implements AdminUserService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<UserResponseDto>> update(Long id, UserUpdateDto userUpdateDto) {
     ResponseEntity<ResponseDto<UserResponseDto>> checkPermission = this.securityUtil.validateUserOwnership(id);
     if (checkPermission != null) {
@@ -137,6 +142,7 @@ public class AdminUserServiceImpl implements AdminUserService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<Object>> delete(Long id) {
     UserEntity userEntity = this.userRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (userEntity == null) {
@@ -150,6 +156,7 @@ public class AdminUserServiceImpl implements AdminUserService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<ResponseSpecification<UserResponseDto>>> find(UserFindDto query,
       Pageable pageable) {
     Specification<UserEntity> userSpec = this.userRepository.hasCriteria(query);
@@ -175,6 +182,7 @@ public class AdminUserServiceImpl implements AdminUserService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<UserResponseDto>> findById(Long id) {
     UserEntity userEntity = this.userRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (userEntity == null) {

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.eduSocialMedia.converters.ChatMessageConverter;
 import com.eduSocialMedia.dtos.ResponseDto;
@@ -39,6 +40,7 @@ public class AdminChatMessageServiceImpl implements AdminChatMessageService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<ChatMessageResponseDto>> create(ChatMessageCreateDto createDto) {
     UserEntity user = this.userRepository.findByIdAndIsDeletedFalse(createDto.getUserId()).orElse(null);
     if (user == null) {
@@ -61,6 +63,7 @@ public class AdminChatMessageServiceImpl implements AdminChatMessageService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<ChatMessageResponseDto>> update(Long id, ChatMessageUpdateDto updateDto) {
     ChatMessageEntity entity = this.chatMessageRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (entity == null) {
@@ -93,6 +96,7 @@ public class AdminChatMessageServiceImpl implements AdminChatMessageService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<Object>> delete(Long id) {
     ChatMessageEntity entity = this.chatMessageRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (entity == null) {
@@ -106,6 +110,7 @@ public class AdminChatMessageServiceImpl implements AdminChatMessageService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<ResponseSpecification<ChatMessageResponseDto>>> find(ChatMessageFindDto query,
       Pageable pageable) {
     Specification<ChatMessageEntity> spec = this.chatMessageRepository.hasCriteria(query);
@@ -131,6 +136,7 @@ public class AdminChatMessageServiceImpl implements AdminChatMessageService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<ChatMessageResponseDto>> findById(Long id) {
     ChatMessageEntity entity = this.chatMessageRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (entity == null) {

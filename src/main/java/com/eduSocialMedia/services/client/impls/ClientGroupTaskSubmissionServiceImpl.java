@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.eduSocialMedia.converters.GroupTaskSubmissionConverter;
 import com.eduSocialMedia.dtos.ResponseDto;
@@ -40,6 +41,7 @@ public class ClientGroupTaskSubmissionServiceImpl implements ClientGroupTaskSubm
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> create(GroupTaskSubmissionCreateDto createDto) {
     GroupTaskEntity groupTask = this.groupTaskRepository.findByIdAndIsDeletedFalse(createDto.getGroupTaskId())
         .orElse(null);
@@ -65,6 +67,7 @@ public class ClientGroupTaskSubmissionServiceImpl implements ClientGroupTaskSubm
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> update(Long id,
       GroupTaskSubmissionUpdateDto updateDto) {
     GroupTaskSubmissionEntity entity = this.groupTaskSubmissionRepository.findByIdAndIsDeletedFalse(id).orElse(null);
@@ -104,6 +107,7 @@ public class ClientGroupTaskSubmissionServiceImpl implements ClientGroupTaskSubm
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<Object>> delete(Long id) {
     GroupTaskSubmissionEntity entity = this.groupTaskSubmissionRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (entity == null) {
@@ -117,6 +121,7 @@ public class ClientGroupTaskSubmissionServiceImpl implements ClientGroupTaskSubm
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<ResponseSpecification<GroupTaskSubmissionResponseDto>>> find(
       GroupTaskSubmissionFindDto query, Pageable pageable) {
     Specification<GroupTaskSubmissionEntity> spec = this.groupTaskSubmissionRepository.hasCriteria(query);
@@ -142,6 +147,7 @@ public class ClientGroupTaskSubmissionServiceImpl implements ClientGroupTaskSubm
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<GroupTaskSubmissionResponseDto>> findById(Long id) {
     GroupTaskSubmissionEntity entity = this.groupTaskSubmissionRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (entity == null) {

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.eduSocialMedia.converters.GroupTaskConverter;
 import com.eduSocialMedia.dtos.ResponseDto;
@@ -35,6 +36,7 @@ public class ClientGroupTaskServiceImpl implements ClientGroupTaskService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<GroupTaskResponseDto>> create(GroupTaskCreateDto createDto) {
     GroupEntity group = this.groupRepository.findByIdAndIsDeletedFalse(createDto.getGroupId()).orElse(null);
     if (group == null) {
@@ -52,6 +54,7 @@ public class ClientGroupTaskServiceImpl implements ClientGroupTaskService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<GroupTaskResponseDto>> update(Long id, GroupTaskUpdateDto updateDto) {
     GroupTaskEntity entity = this.groupTaskRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (entity == null) {
@@ -80,6 +83,7 @@ public class ClientGroupTaskServiceImpl implements ClientGroupTaskService {
   }
 
   @Override
+  @Transactional
   public ResponseEntity<ResponseDto<Object>> delete(Long id) {
     GroupTaskEntity entity = this.groupTaskRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (entity == null) {
@@ -93,6 +97,7 @@ public class ClientGroupTaskServiceImpl implements ClientGroupTaskService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<ResponseSpecification<GroupTaskResponseDto>>> find(GroupTaskFindDto query,
       Pageable pageable) {
     Specification<GroupTaskEntity> spec = this.groupTaskRepository.hasCriteria(query);
@@ -118,6 +123,7 @@ public class ClientGroupTaskServiceImpl implements ClientGroupTaskService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ResponseEntity<ResponseDto<GroupTaskResponseDto>> findById(Long id) {
     GroupTaskEntity entity = this.groupTaskRepository.findByIdAndIsDeletedFalse(id).orElse(null);
     if (entity == null) {
